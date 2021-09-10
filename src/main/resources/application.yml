@@ -1,0 +1,31 @@
+#server
+server:
+  port: 8080
+#spring
+spring:
+  #datasource
+  datasource:
+    #database
+    url: jdbc:mysql://127.0.0.1:3306/intention?serverTimezone=GMT%2B8
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #druid
+    type: com.alibaba.druid.pool.DruidDataSource
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+#mybatis
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: classpath*:edu.njust.model
