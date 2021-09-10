@@ -1,2 +1,2 @@
 # IntentionAnalysis
- njust-IntentionAnalysis
+ IntentionAnalysis
