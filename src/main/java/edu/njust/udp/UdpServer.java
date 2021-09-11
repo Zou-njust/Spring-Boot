@@ -15,19 +15,28 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
 import java.util.Map;
 
 public class UdpServer {
 
     @Bean
+    public IntegrationFlow integrationFlow() {
+        return IntegrationFlows.from(Udp.inboundAdapter(6000)).channel("udpChannel").get();
+    }
+
+    @Bean
     public UnicastReceivingChannelAdapter getUnicastReceivingChannelAdapter() {
-        UnicastReceivingChannelAdapter adapter = new UnicastReceivingChannelAdapter(8081);//实例化一个udp 8081端口
-        adapter.setOutputChannelName("udp");
-        System.out.println(adapter);
+        UnicastReceivingChannelAdapter adapter = new UnicastReceivingChannelAdapter(6000);//实例化一个udp 8081端口
+        adapter.setOutputChannelName("udpChannel");
+        System.out.println(adapter.getPort());
         return adapter;
     }
 
-    @Transformer(inputChannel="udp",outputChannel="udpString")
+    @Transformer(inputChannel="udpChannel",outputChannel="udpString")
     public String transformer(Message<?> message) {
         //把接收的数据转化为字符串
         String s = new String((byte[])message.getPayload());
@@ -59,4 +68,20 @@ public class UdpServer {
     public void udpMessageHandle2(String message) {
         System.out.println("udp2:" +message);
     }
+
+    //发送消息
+    public void sendMessage(String message) {
+        System.out.println("发送UDP: " + message);
+        InetSocketAddress inetSocketAddress = new InetSocketAddress("localhost", 8082);
+        byte[] udpMessage = message.getBytes();
+        DatagramPacket datagramPacket = null;
+        try (DatagramSocket datagramSocket = new DatagramSocket()) {
+            datagramPacket = new DatagramPacket(udpMessage, udpMessage.length, inetSocketAddress);
+            datagramSocket.send(datagramPacket);
+        } catch (IOException e) {
+            System.out.println(e.getMessage() + e);
+        }
+        System.out.println("发送成功");
+    }
+
 }
