@@ -16,7 +16,7 @@
 
 #### UDP接口
 
-1. 目前UDP连接处于测试阶段
+1. 目前UDP连接处于测试阶段，可以先使用controller的HTTP接口
 2. UdpPortListener提供8081端口的监听，用于接收数据，当springboot启动时自动开启服务
 3. UdpSender和UdpServer有问题，可测试使用
 
