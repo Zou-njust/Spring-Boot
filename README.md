@@ -7,13 +7,16 @@
 #### 说明
 
 1. mysql配置在resources/application.yml，可以设置数据库路径、用户名、密码
+2. 各组在mysql中建立需要的表，定期上传构建的.sql文件
+3. pom.xml中添加需要的依赖包
+4. mapper提供了两种sql语句书写途径
+5. controller-service-mapper三层结构应一一对应
+6. 具体算法应封装在algorithm/_文件夹中，各组之间互不干扰
+7. 各组应新建分支在自己分支上进行开发，定期合并到主分支
 
-2. pom.xml中添加需要的依赖包
+#### UDP接口
 
-3. mapper提供了两种sql语句书写途径
+1. 目前UDP连接处于测试阶段
+2. UdpPortListener提供8081端口的监听，用于接收数据，当springboot启动时自动开启服务
+3. UdpSender和UdpServer有问题，可测试使用
 
-4. controller-service-mapper三层结构应一一对应
-
-5. 具体算法应封装在algorithm/_文件夹中，各组之间互不干扰
-
-   
