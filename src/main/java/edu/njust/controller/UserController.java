@@ -1,6 +1,6 @@
 package edu.njust.controller;
 
-import edu.njust.model.UserModel;
+import edu.njust.model.mysql.UserModel;
 import edu.njust.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;

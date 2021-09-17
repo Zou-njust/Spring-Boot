@@ -5,11 +5,17 @@ server:
 spring:
   #datasource
   datasource:
+    mysql:
     #database
-    url: jdbc:mysql://127.0.0.1:3306/intention?serverTimezone=GMT%2B8
-    username: root
-    password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://127.0.0.1:3306/intention?serverTimezone=GMT%2B8
+      username: root
+      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    oracle:
+      jdbc-url: jdbc:oracle:thin:@//localhost:1521/ORCL
+      username: BN
+      password: root
+      driverClassName: oracle.jdbc.driver.OracleDriver
     #druid
     type: com.alibaba.druid.pool.DruidDataSource
     filters: stat
