@@ -25,17 +25,21 @@ public class TargetAttributeJudgeController {
     @Resource
     private TYpTargetRecogService targetRecogService;
 
-    @GetMapping("select")
+    @GetMapping("/selectLine")
     public List<TGlTrackline> select() {
         return judgeService.get();
     }
 
+    @GetMapping("/selectRecog")
+    public List<TYpTargetRecog> selectRecog() {
+        return targetRecogService.get();
+    }
     @PostMapping("/trainDt")
     public void train(@RequestParam(value = "data_path") String data_path, @RequestParam(value = "targetAttr") String targetAttr) {
         judgeService.trainDt(data_path, targetAttr);
     }
 
-    @GetMapping("/judgeMb")
+    @PostMapping("/judgeMb")
     public TYpTargetRecog judge(@RequestBody TGlTrackline trackline) {
         // 构建决策树
         TreeNode node = new TreeNode();
