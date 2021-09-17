@@ -27,5 +27,5 @@ spring:
     maxOpenPreparedStatements: 20
 #mybatis
 mybatis:
-  mapper-locations: classpath*:mapper/*.xml
+  mapper-locations: classpath*:mapper/*.xml,edu.njust.mapper/*.xml
   type-aliases-package: classpath*:edu.njust.model
