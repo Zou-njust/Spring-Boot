@@ -10,6 +10,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/threat")
+@CrossOrigin
 public class ThreatController {
     @Autowired
     private ThreatAnalysis threatAnalysis;
@@ -34,5 +35,12 @@ public class ThreatController {
         threatAnalysis.setType(type);
 
         threatAnalysis.train(data);
+    }
+
+    @PostMapping("/get_bn_model")
+    public List getBNModel(@RequestParam("type") int type){
+        threatAnalysis.setType(type);
+
+        return threatAnalysis.getNodeAndLink();
     }
 }

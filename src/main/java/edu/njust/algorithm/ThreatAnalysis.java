@@ -73,6 +73,20 @@ public class ThreatAnalysis {
                 // 依次添加CPT
                 for (edu.njust.model.oracle.Node n : result){
                     Node node = net.getNode(n.getName());
+
+                    int cptLength = node.getNumStates();
+                    NodeList parents = node.getParents();
+                    for (Object p : parents){
+                        Node parent = (Node)p;
+                        cptLength *= parent.getNumStates();
+                    }
+                    if (cptLength != n.getCpt().split(",").length){
+                        float[] cpt = new float[cptLength];
+                        for (int c = 0; c < cptLength; c ++){
+                            cpt[c] = (float)(1 / cptLength);
+                        }
+                    }
+
                     if (!n.getCpt().equals("null")){
                         String[] cptStrings = n.getCpt().split(",");
                         float[] cpt = new float[cptStrings.length];
@@ -80,6 +94,12 @@ public class ThreatAnalysis {
                             cpt[c] = Float.parseFloat(cptStrings[c]);
                         }
                         node.setCPTable(cpt);
+                    }
+                    else {
+                        float[] cpt = new float[cptLength];
+                        for (int c = 0; c < cptLength; c ++){
+                            cpt[c] = (float)(1 / cptLength);
+                        }
                     }
                 }
                 net.compile();
@@ -121,7 +141,13 @@ public class ThreatAnalysis {
                         if ((node = net.getNode(d.getKey())) != null){
                             Object value = d.getValue();
                             if (value instanceof String){
-                                node.finding().enterState((String)value);
+                                if (value.equals("null")){
+                                    node.finding().clear();
+                                }
+                                else {
+                                    node.finding().enterState((String)value);
+                                }
+
                             }
                             else if (value instanceof Integer){
                                 node.finding().enterState((int)value);
@@ -223,5 +249,36 @@ public class ThreatAnalysis {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public List getNodeAndLink(){
+        class TmpLink{
+            public String from;
+            public String to;
+        }
+        List<Map> resultList = new ArrayList<>();
+
+        for (int i = type * netNum; i < (type + 1) * netNum; i ++){
+            List<edu.njust.model.oracle.Node> nodeList = nodeService.findAllNodeByType(i);
+
+            List<TmpLink> linkList = new ArrayList<>();
+            for (edu.njust.model.oracle.Node node : nodeList){
+                List<Relationship> relationshipList = relationshipService.findRelationshipByTo(node.getId());
+                for (Relationship relationship : relationshipList){
+                    TmpLink tmpLink = new TmpLink();
+                    tmpLink.from = nodeService.findNameById(relationship.getFrom());
+                    tmpLink.to = nodeService.findNameById(relationship.getTo());
+                    linkList.add(tmpLink);
+                }
+            }
+            Map result = new HashMap();
+            result.put("node", nodeList);
+            result.put("link", linkList);
+
+            resultList.add(result);
+        }
+
+
+        return resultList;
     }
 }

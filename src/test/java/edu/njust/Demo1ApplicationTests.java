@@ -193,7 +193,7 @@ class Demo1ApplicationTests {
         for (int _ = 0; _ < 100; _ ++){
             Map<String, Integer> d = new HashMap<>();
             for (int type : types) {
-                List<edu.njust.model.oracle.Node> result = nodeService.findAllNodeByType(type);
+                List<edu.njust.model.oracle.Node> result = nodeService.findAllNodeByType(type+10);
                 for (edu.njust.model.oracle.Node n : result){
                     d.put(n.getName(), random.nextInt(n.getState().split(",").length));
                 }
@@ -214,7 +214,7 @@ class Demo1ApplicationTests {
             e.printStackTrace();
         }
 
-        threatAnalysis.setType(ThreatAnalysis.RECONNAISSANCE);
+        threatAnalysis.setType(ThreatAnalysis.FIGHTER);
         threatAnalysis.train(data);
 
     }
