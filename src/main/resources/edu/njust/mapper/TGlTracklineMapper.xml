@@ -2,15 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.njust.mapper.TGlTracklineMapper">
   <resultMap id="BaseResultMap" type="edu.njust.model.TGlTrackline">
-    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="id" jdbcType="VARCHAR" property="id" />
     <result column="target_id" jdbcType="VARCHAR" property="targetId" />
-    <result column="target_sort" jdbcType="TINYINT" property="targetSort" />
+    <result column="target_sort" jdbcType="VARCHAR" property="targetSort" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="takeoff_airport_id" jdbcType="VARCHAR" property="takeoffAirportId" />
     <result column="landing_airport_id" jdbcType="VARCHAR" property="landingAirportId" />
     <result column="task_action_area_id" jdbcType="VARCHAR" property="taskActionAreaId" />
     <result column="save_path" jdbcType="VARCHAR" property="savePath" />
-    <result column="import_time" jdbcType="TIMESTAMP" property="importTime" />
+    <result column="import_time" jdbcType="VARCHAR" property="importTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -88,16 +88,6 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from t_gl_trackline
-    where id = #{id,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from t_gl_trackline
-    where id = #{id,jdbcType=VARCHAR}
-  </delete>
   <delete id="deleteByExample" parameterType="edu.njust.model.TGlTracklineExample">
     delete from t_gl_trackline
     <if test="_parameter != null">
@@ -111,9 +101,9 @@
     insert into t_gl_trackline (target_id, target_sort, name, 
       takeoff_airport_id, landing_airport_id, task_action_area_id, 
       save_path, import_time)
-    values (#{targetId,jdbcType=VARCHAR}, #{targetSort,jdbcType=TINYINT}, #{name,jdbcType=VARCHAR}, 
+    values (#{targetId,jdbcType=VARCHAR}, #{targetSort,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{takeoffAirportId,jdbcType=VARCHAR}, #{landingAirportId,jdbcType=VARCHAR}, #{taskActionAreaId,jdbcType=VARCHAR}, 
-      #{savePath,jdbcType=VARCHAR}, #{importTime,jdbcType=TIMESTAMP})
+      #{savePath,jdbcType=VARCHAR}, #{importTime,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="edu.njust.model.TGlTrackline">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
@@ -151,7 +141,7 @@
         #{targetId,jdbcType=VARCHAR},
       </if>
       <if test="targetSort != null">
-        #{targetSort,jdbcType=TINYINT},
+        #{targetSort,jdbcType=VARCHAR},
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
@@ -169,7 +159,7 @@
         #{savePath,jdbcType=VARCHAR},
       </if>
       <if test="importTime != null">
-        #{importTime,jdbcType=TIMESTAMP},
+        #{importTime,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -189,7 +179,7 @@
         target_id = #{record.targetId,jdbcType=VARCHAR},
       </if>
       <if test="record.targetSort != null">
-        target_sort = #{record.targetSort,jdbcType=TINYINT},
+        target_sort = #{record.targetSort,jdbcType=VARCHAR},
       </if>
       <if test="record.name != null">
         name = #{record.name,jdbcType=VARCHAR},
@@ -207,7 +197,7 @@
         save_path = #{record.savePath,jdbcType=VARCHAR},
       </if>
       <if test="record.importTime != null">
-        import_time = #{record.importTime,jdbcType=TIMESTAMP},
+        import_time = #{record.importTime,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -218,57 +208,15 @@
     update t_gl_trackline
     set id = #{record.id,jdbcType=VARCHAR},
       target_id = #{record.targetId,jdbcType=VARCHAR},
-      target_sort = #{record.targetSort,jdbcType=TINYINT},
+      target_sort = #{record.targetSort,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
       takeoff_airport_id = #{record.takeoffAirportId,jdbcType=VARCHAR},
       landing_airport_id = #{record.landingAirportId,jdbcType=VARCHAR},
       task_action_area_id = #{record.taskActionAreaId,jdbcType=VARCHAR},
       save_path = #{record.savePath,jdbcType=VARCHAR},
-      import_time = #{record.importTime,jdbcType=TIMESTAMP}
+      import_time = #{record.importTime,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
-  </update>
-  <update id="updateByPrimaryKeySelective" parameterType="edu.njust.model.TGlTrackline">
-    update t_gl_trackline
-    <set>
-      <if test="targetId != null">
-        target_id = #{targetId,jdbcType=VARCHAR},
-      </if>
-      <if test="targetSort != null">
-        target_sort = #{targetSort,jdbcType=TINYINT},
-      </if>
-      <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="takeoffAirportId != null">
-        takeoff_airport_id = #{takeoffAirportId,jdbcType=VARCHAR},
-      </if>
-      <if test="landingAirportId != null">
-        landing_airport_id = #{landingAirportId,jdbcType=VARCHAR},
-      </if>
-      <if test="taskActionAreaId != null">
-        task_action_area_id = #{taskActionAreaId,jdbcType=VARCHAR},
-      </if>
-      <if test="savePath != null">
-        save_path = #{savePath,jdbcType=VARCHAR},
-      </if>
-      <if test="importTime != null">
-        import_time = #{importTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="edu.njust.model.TGlTrackline">
-    update t_gl_trackline
-    set target_id = #{targetId,jdbcType=VARCHAR},
-      target_sort = #{targetSort,jdbcType=TINYINT},
-      name = #{name,jdbcType=VARCHAR},
-      takeoff_airport_id = #{takeoffAirportId,jdbcType=VARCHAR},
-      landing_airport_id = #{landingAirportId,jdbcType=VARCHAR},
-      task_action_area_id = #{taskActionAreaId,jdbcType=VARCHAR},
-      save_path = #{savePath,jdbcType=VARCHAR},
-      import_time = #{importTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

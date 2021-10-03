@@ -1,7 +1,6 @@
 package edu.njust.model;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class TGlTracklineExample {
@@ -255,52 +254,62 @@ public class TGlTracklineExample {
             return (Criteria) this;
         }
 
-        public Criteria andTargetSortEqualTo(Byte value) {
+        public Criteria andTargetSortEqualTo(String value) {
             addCriterion("target_sort =", value, "targetSort");
             return (Criteria) this;
         }
 
-        public Criteria andTargetSortNotEqualTo(Byte value) {
+        public Criteria andTargetSortNotEqualTo(String value) {
             addCriterion("target_sort <>", value, "targetSort");
             return (Criteria) this;
         }
 
-        public Criteria andTargetSortGreaterThan(Byte value) {
+        public Criteria andTargetSortGreaterThan(String value) {
             addCriterion("target_sort >", value, "targetSort");
             return (Criteria) this;
         }
 
-        public Criteria andTargetSortGreaterThanOrEqualTo(Byte value) {
+        public Criteria andTargetSortGreaterThanOrEqualTo(String value) {
             addCriterion("target_sort >=", value, "targetSort");
             return (Criteria) this;
         }
 
-        public Criteria andTargetSortLessThan(Byte value) {
+        public Criteria andTargetSortLessThan(String value) {
             addCriterion("target_sort <", value, "targetSort");
             return (Criteria) this;
         }
 
-        public Criteria andTargetSortLessThanOrEqualTo(Byte value) {
+        public Criteria andTargetSortLessThanOrEqualTo(String value) {
             addCriterion("target_sort <=", value, "targetSort");
             return (Criteria) this;
         }
 
-        public Criteria andTargetSortIn(List<Byte> values) {
+        public Criteria andTargetSortLike(String value) {
+            addCriterion("target_sort like", value, "targetSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andTargetSortNotLike(String value) {
+            addCriterion("target_sort not like", value, "targetSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andTargetSortIn(List<String> values) {
             addCriterion("target_sort in", values, "targetSort");
             return (Criteria) this;
         }
 
-        public Criteria andTargetSortNotIn(List<Byte> values) {
+        public Criteria andTargetSortNotIn(List<String> values) {
             addCriterion("target_sort not in", values, "targetSort");
             return (Criteria) this;
         }
 
-        public Criteria andTargetSortBetween(Byte value1, Byte value2) {
+        public Criteria andTargetSortBetween(String value1, String value2) {
             addCriterion("target_sort between", value1, value2, "targetSort");
             return (Criteria) this;
         }
 
-        public Criteria andTargetSortNotBetween(Byte value1, Byte value2) {
+        public Criteria andTargetSortNotBetween(String value1, String value2) {
             addCriterion("target_sort not between", value1, value2, "targetSort");
             return (Criteria) this;
         }
@@ -665,52 +674,62 @@ public class TGlTracklineExample {
             return (Criteria) this;
         }
 
-        public Criteria andImportTimeEqualTo(Date value) {
+        public Criteria andImportTimeEqualTo(String value) {
             addCriterion("import_time =", value, "importTime");
             return (Criteria) this;
         }
 
-        public Criteria andImportTimeNotEqualTo(Date value) {
+        public Criteria andImportTimeNotEqualTo(String value) {
             addCriterion("import_time <>", value, "importTime");
             return (Criteria) this;
         }
 
-        public Criteria andImportTimeGreaterThan(Date value) {
+        public Criteria andImportTimeGreaterThan(String value) {
             addCriterion("import_time >", value, "importTime");
             return (Criteria) this;
         }
 
-        public Criteria andImportTimeGreaterThanOrEqualTo(Date value) {
+        public Criteria andImportTimeGreaterThanOrEqualTo(String value) {
             addCriterion("import_time >=", value, "importTime");
             return (Criteria) this;
         }
 
-        public Criteria andImportTimeLessThan(Date value) {
+        public Criteria andImportTimeLessThan(String value) {
             addCriterion("import_time <", value, "importTime");
             return (Criteria) this;
         }
 
-        public Criteria andImportTimeLessThanOrEqualTo(Date value) {
+        public Criteria andImportTimeLessThanOrEqualTo(String value) {
             addCriterion("import_time <=", value, "importTime");
             return (Criteria) this;
         }
 
-        public Criteria andImportTimeIn(List<Date> values) {
+        public Criteria andImportTimeLike(String value) {
+            addCriterion("import_time like", value, "importTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andImportTimeNotLike(String value) {
+            addCriterion("import_time not like", value, "importTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andImportTimeIn(List<String> values) {
             addCriterion("import_time in", values, "importTime");
             return (Criteria) this;
         }
 
-        public Criteria andImportTimeNotIn(List<Date> values) {
+        public Criteria andImportTimeNotIn(List<String> values) {
             addCriterion("import_time not in", values, "importTime");
             return (Criteria) this;
         }
 
-        public Criteria andImportTimeBetween(Date value1, Date value2) {
+        public Criteria andImportTimeBetween(String value1, String value2) {
             addCriterion("import_time between", value1, value2, "importTime");
             return (Criteria) this;
         }
 
-        public Criteria andImportTimeNotBetween(Date value1, Date value2) {
+        public Criteria andImportTimeNotBetween(String value1, String value2) {
             addCriterion("import_time not between", value1, value2, "importTime");
             return (Criteria) this;
         }

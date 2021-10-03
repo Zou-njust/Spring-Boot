@@ -35,7 +35,7 @@ public class TargetAttributeJudgeController {
         judgeService.trainDt(data_path, targetAttr);
     }
 
-    @GetMapping("/judgeMb")
+    @PostMapping("/judgeMb")
     public TYpTargetRecog judge(@RequestBody TGlTrackline trackline) {
         // 构建决策树
         TreeNode node = new TreeNode();

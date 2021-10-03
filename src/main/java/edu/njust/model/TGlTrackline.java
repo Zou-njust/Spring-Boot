@@ -1,14 +1,13 @@
 package edu.njust.model;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class TGlTrackline implements Serializable {
     private String id;
 
     private String targetId;
 
-    private Byte targetSort;
+    private String targetSort;
 
     private String name;
 
@@ -20,7 +19,7 @@ public class TGlTrackline implements Serializable {
 
     private String savePath;
 
-    private Date importTime;
+    private String importTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -40,11 +39,11 @@ public class TGlTrackline implements Serializable {
         this.targetId = targetId;
     }
 
-    public Byte getTargetSort() {
+    public String getTargetSort() {
         return targetSort;
     }
 
-    public void setTargetSort(Byte targetSort) {
+    public void setTargetSort(String targetSort) {
         this.targetSort = targetSort;
     }
 
@@ -88,11 +87,11 @@ public class TGlTrackline implements Serializable {
         this.savePath = savePath;
     }
 
-    public Date getImportTime() {
+    public String getImportTime() {
         return importTime;
     }
 
-    public void setImportTime(Date importTime) {
+    public void setImportTime(String importTime) {
         this.importTime = importTime;
     }
 
