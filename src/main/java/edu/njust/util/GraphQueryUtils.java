@@ -68,9 +68,17 @@ public class GraphQueryUtils {
     public static final String EVENT_LABEL = "事件";
 
     /**
+     * 事理图谱relation
+     */
+    public static final String SL_RELATION = "MATCH (n:事理图谱) -[r]->(m:事理图谱)  return *";
+    /**
+     * 知识图谱relation
+     */
+    public static final String ZS_RELATION = "MATCH (n:知识图谱) -[r]->(m:知识图谱)  return *";
+    /**
      * 事件节点Label
      */
-    public static final String SL_RELATION = "MATCH (n:事件) -[r]->(m:地点)  return *";
+    public static final String CREATE_NODE= "  return *";
 
     private Driver driver;
 
@@ -382,7 +390,13 @@ public class GraphQueryUtils {
         Map<String, Object> map = node.asMap();
         nodeVO.setId(node.id());
         nodeVO.setName((String) map.getOrDefault("name", ""));
-        nodeVO.setType(node.labels().iterator().next());
+        Iterator<String> it = node.labels().iterator();
+        String type = new String();
+        type = it.next();
+        if(type.equals("知识图谱") || type.equals("事理图谱")){
+            type = it.next();
+        }
+        nodeVO.setType(type);
         Map<String, Object> properties = new HashMap<>(map);
         // 检测名称为纯英文的剔出
         // 2021.1.8 英文属性不剔除

@@ -1,13 +1,18 @@
 package edu.njust.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import edu.njust.dal.IFieldMeanRepository;
+import edu.njust.dal.IKGraphRepository;
 import edu.njust.dal.Table2NodelLabelRepository;
 import edu.njust.entity.DataMap;
+import edu.njust.entity.QAEntityItem;
 import edu.njust.entity.dto.FieldMean;
 import edu.njust.entity.dto.Table2NodeLabel;
 import edu.njust.service.IKnowGraphControlService;
 import edu.njust.service.ITable2NeoFilterService;
 import edu.njust.util.GraphQueryUtils;
+import edu.njust.util.Neo4jUtil;
 import edu.njust.util.StringUtil;
 import edu.njust.vo.GraphVO;
 import edu.njust.vo.NodeVO;
@@ -15,10 +20,7 @@ import edu.njust.vo.RelationVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 知识图谱控制服务实现类
@@ -33,6 +35,10 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
     private GraphQueryUtils graphQueryUtils;
     private IFieldMeanRepository fieldMeanRepository;
     private Table2NodelLabelRepository table2NodelLabelRepository;
+    @Autowired
+    private IKGraphRepository ikGraphRepository;
+    @Autowired
+    private Neo4jUtil neo4jUtil;
 
     public KnowGraphControlServiceImpl(GraphQueryUtils graphQueryUtils, IFieldMeanRepository fieldMeanRepository, Table2NodelLabelRepository table2NodelLabelRepository) {
         this.graphQueryUtils = graphQueryUtils;
@@ -150,6 +156,7 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
     @Override
     public List<NodeVO> queryNodeByLabel(String label) {
         List<NodeVO> nodes = graphQueryUtils.findGraphNode(String.format(GraphQueryUtils.NODE_LABLE, label));
+        System.out.println("nodes" + nodes);
         for (NodeVO node : nodes) {
             Map<String, Object> properties = node.getProperties();
             table2NeoFilterService.filterFieldMean(properties, label, null, null);
@@ -158,9 +165,19 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
         return nodes;
     }
     @Override
-    public List<RelationVO> querySLRelation(){
-        List<RelationVO> relations = graphQueryUtils.findGraphRel(GraphQueryUtils.SL_RELATION);
-        return relations;
+    public List<RelationVO> queryDomainRelation(String domain){
+        List<RelationVO> relations;
+        System.out.println(domain);
+        if(domain.equals("事理图谱")){
+            relations = graphQueryUtils.findGraphRel(GraphQueryUtils.SL_RELATION);
+            return relations;
+        }
+        if(domain.equals("知识图谱")){
+            System.out.println("start" + domain);
+            relations = graphQueryUtils.findGraphRel(GraphQueryUtils.ZS_RELATION);
+            return relations;
+        }
+        return  null;
     }
 
     @Override
@@ -181,5 +198,33 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
     @Override
     public Boolean deleteRel(Integer relId) {
         return graphQueryUtils.deleteRel(relId);
+    }
+
+    @Override
+    public RelationVO creteRel(String domain,String source, String target, String name){
+        HashMap<String, Object> map = ikGraphRepository.createlink(domain, Integer.parseInt(source), Integer.parseInt(target),name);
+        RelationVO relationVO = new RelationVO();
+        relationVO.setId((long) Integer.parseInt((String) map.get("uuid")));
+        relationVO.setName((String) map.get("name"));
+        System.out.println((String) map.get("sourceId"));
+        relationVO.setSourceId((long) Integer.parseInt((String) map.get("sourceId")));
+        relationVO.setTargetId((long) Integer.parseInt((String) map.get("targetId")));
+        return relationVO;
+    }
+    @Override
+    public Integer createNode(String domain, String type,Map<String,Object> property){
+        //graphQueryUtils.createNodeByMap(GraphQueryUtils.CREATE_NODE, properties);
+        try{
+            List<HashMap<String, Object>> graphNodeList = new ArrayList<HashMap<String, Object>>();
+            //System.out.println('1' + JSON.toJSONString(property));
+            String propertiesString = neo4jUtil.getFilterPropertiesJson(JSON.toJSONString(property));
+            //System.out.println('1' + propertiesString);
+            String cypherSql = String.format("create (n:`%s`:`%s` %s) return n",
+                    domain,type, propertiesString);
+            graphNodeList = neo4jUtil.GetGraphNode(cypherSql);
+            return Integer.parseInt((String) graphNodeList.get(0).get("uuid"));
+        }catch (Exception e){
+            throw e;
+        }
     }
 }

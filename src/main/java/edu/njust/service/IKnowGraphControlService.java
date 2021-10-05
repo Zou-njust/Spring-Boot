@@ -1,6 +1,7 @@
 package edu.njust.service;
 
 import edu.njust.entity.DataMap;
+import edu.njust.entity.QAEntityItem;
 import edu.njust.vo.GraphVO;
 import edu.njust.vo.NodeVO;
 import edu.njust.vo.RelationVO;
@@ -124,7 +125,7 @@ public interface IKnowGraphControlService {
      *
      * @return relation
      */
-    public List<RelationVO> querySLRelation();
+    public List<RelationVO> queryDomainRelation(String domain);
     /**
      * 根据节点编号查询当前节点的关系
      *
@@ -158,11 +159,21 @@ public interface IKnowGraphControlService {
     Boolean deleteRel(Integer relId);
 
     /**
+     * 添加关系
+     *
+     * @param domain 关系领域
+     * @param source 关系源节点ID
+     * @param target 关系目标节点ID
+     * @param name 关系名称
+     * @return 删除结果
+     */
+    RelationVO creteRel(String domain,String source, String target, String name);
+    /**
      * 创建单个节点
      *
      * @param domain
      * @param entity
      * @return
      */
-    HashMap<String, Object> createnode(String domain, QAEntityItem entity);
+    Integer createNode(String domain, String type,Map<String,Object> property);
 }
