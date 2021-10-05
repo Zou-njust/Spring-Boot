@@ -4,15 +4,15 @@ import edu.njust.model.oracle.Relationship;
 import edu.njust.service.NodeService;
 import edu.njust.service.RelationshipService;
 import norsys.netica.*;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 @Component
 public class ThreatAnalysis {
@@ -21,6 +21,9 @@ public class ThreatAnalysis {
 
     @Autowired
     private RelationshipService relationshipService;
+
+    @Autowired
+    private MembershipFunction membershipFunction;
 
     static private Environ env;
 
@@ -155,6 +158,9 @@ public class ThreatAnalysis {
                             else if (value instanceof float[]){
                                 node.finding().enterLikelihood((float[])value);
                             }
+                            else if (value instanceof Double){
+                                node.finding().enterLikelihood(membershipFunction.getMembership(nodeService.findIdByNameAndType(node.getName(), type), (Double) value));
+                            }
                         }
 
                     }
@@ -180,6 +186,13 @@ public class ThreatAnalysis {
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        data.put("planeType", "U-2");
+        data.put("area", "关岛");
+        data.put("location", new double[]{100, 120});
+        data.put("intention", intention);
+        data.put("threatRange", 500.);
+        writeToReport(result, data);
 
         return result;
     }
@@ -280,5 +293,36 @@ public class ThreatAnalysis {
 
 
         return resultList;
+    }
+
+    public void writeToReport(Map<String, float[]> threat, Map<String, Object> data){
+        try {
+//            InputStream inputStream = new FileInputStream("./src/main/resources/reportTemplate.doc");
+            FileOutputStream os = new FileOutputStream(new File("./src/main/resources/bn/report.docx"));
+
+            Map<String, String> dataMap = new HashMap<>();
+            dataMap.put("机型", data.get("planeType").toString());
+            dataMap.put("地区", data.get("area").toString());
+            dataMap.put("坐标", Arrays.toString((double[]) data.get("location")));
+            dataMap.put("意图", ((List) data.get("intention")).toString());
+            dataMap.put("威胁范围", (double) data.get("threatRange") + "");
+            dataMap.put("威胁等级", Arrays.toString(threat.get("WeiXieDengJi")));
+
+            XWPFDocument doc = new XWPFDocument();
+            for (Map.Entry<String, String> entry : dataMap.entrySet()){
+                XWPFParagraph para = doc.createParagraph();
+                XWPFRun run = para.createRun();
+                run.setText(entry.getKey() + ": " + entry.getValue());
+//                System.out.println(entry.getValue());
+            }
+
+            doc.write(os);
+            doc.close();
+            os.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

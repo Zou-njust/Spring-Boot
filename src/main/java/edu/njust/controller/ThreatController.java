@@ -1,9 +1,15 @@
 package edu.njust.controller;
 
 import edu.njust.algorithm.ThreatAnalysis;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,5 +48,44 @@ public class ThreatController {
         threatAnalysis.setType(type);
 
         return threatAnalysis.getNodeAndLink();
+    }
+
+    @RequestMapping("/get_report")
+    public String getReport(@RequestParam("filename") String fileName, HttpServletResponse response){
+        OutputStream os = null;
+        InputStream is = null;
+        try {
+            os = response.getOutputStream();
+            response.reset();
+            response.setContentType("application/x-download;charset=utf-8");
+            response.setHeader("Content-Disposition", "attachment;filename="+ new String(fileName.getBytes("utf-8"),"ISO8859-1"));
+            File f = new File("./src/main/resources/bn/report.docx");
+
+            is = new FileInputStream(f);
+            if (is == null){
+                return "download failed";
+            }
+
+            IOUtils.copy(is, response.getOutputStream());
+            response.getOutputStream().flush();
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return "download failed";
+        }
+        finally {
+            try {
+                if (os != null){
+                    os.close();
+                }
+                if (is != null){
+                    is.close();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+        return "download succeeded";
     }
 }

@@ -44,13 +44,16 @@ class Demo1ApplicationTests {
                         int stateNum = node.getNumStates();
 
                         StringBuilder sb = new StringBuilder();
-                        for (int s = 0; s < 243; s ++){
+                        /*
+                        *******************************************
+                         */
+                        for (int s = 0; s < 2; s ++){
                             sb.append("c").append(s);
-                            if (s < 242){
+                            if (s < 1){
                                 sb.append(',');
                             }
                         }
-                        node.addStates(stateNum, sb.toString(), 243, -1);
+                        node.addStates(stateNum, sb.toString(), 2, -1);
 
                         for (int s = 0; s < stateNum; s ++){
                             node.state(s).delete();
@@ -59,14 +62,17 @@ class Demo1ApplicationTests {
                     else if (node.getName().equals("QiFeiJiChang")){
                         int stateNum = node.getNumStates();
 
+                        /*
+                         *******************************************
+                         */
                         StringBuilder sb = new StringBuilder();
-                        for (int s = 0; s < 1223; s ++){
+                        for (int s = 0; s < 2; s ++){
                             sb.append("a").append(s);
-                            if (s < 1222){
+                            if (s < 1){
                                 sb.append(',');
                             }
                         }
-                        node.addStates(stateNum, sb.toString(), 1223, -1);
+                        node.addStates(stateNum, sb.toString(), 2, -1);
 
                         for (int s = 0; s < stateNum; s ++){
                             node.state(s).delete();
@@ -193,6 +199,7 @@ class Demo1ApplicationTests {
         for (int _ = 0; _ < 100; _ ++){
             Map<String, Integer> d = new HashMap<>();
             for (int type : types) {
+//                System.out.println(type);
                 List<edu.njust.model.oracle.Node> result = nodeService.findAllNodeByType(type+10);
                 for (edu.njust.model.oracle.Node n : result){
                     d.put(n.getName(), random.nextInt(n.getState().split(",").length));
@@ -260,6 +267,8 @@ class Demo1ApplicationTests {
         intention.add(0.3f);
         threatAnalysis.setType(ThreatAnalysis.RECONNAISSANCE);
         System.out.println(threatAnalysis.analyze(data, intention));
+
+
     }
 
 
