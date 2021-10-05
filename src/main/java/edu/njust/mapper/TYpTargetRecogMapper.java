@@ -10,7 +10,7 @@ public interface TYpTargetRecogMapper {
 
     int deleteByExample(TYpTargetRecogExample example);
 
-    int deleteByPrimaryKey(String id);
+    int deleteByPrimaryKey(Integer id);
 
     int insert(TYpTargetRecog record);
 
@@ -18,7 +18,7 @@ public interface TYpTargetRecogMapper {
 
     List<TYpTargetRecog> selectByExample(TYpTargetRecogExample example);
 
-    TYpTargetRecog selectByPrimaryKey(String id);
+    TYpTargetRecog selectByPrimaryKey(Integer id);
 
     int updateByExampleSelective(@Param("record") TYpTargetRecog record, @Param("example") TYpTargetRecogExample example);
 
