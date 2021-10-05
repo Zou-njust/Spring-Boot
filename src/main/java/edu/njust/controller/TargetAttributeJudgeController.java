@@ -5,6 +5,8 @@ import edu.njust.model.TGlTrackline;
 import edu.njust.model.TYpTargetRecog;
 import edu.njust.service.TYpTargetRecogService;
 import edu.njust.service.TargetAttributeJudgeService;
+import edu.njust.utils.AutoRecogResult;
+import javafx.beans.binding.DoubleExpression;
 import org.springframework.cglib.beans.BeanMap;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +18,7 @@ import java.util.Map;
 
 @RestController
 @Scope("prototype")
-@RequestMapping("/targetJudge")
+@RequestMapping("/targetRecog")
 @CrossOrigin
 public class TargetAttributeJudgeController {
 
@@ -25,11 +27,34 @@ public class TargetAttributeJudgeController {
     @Resource
     private TYpTargetRecogService targetRecogService;
 
-    @GetMapping("select")
+//    @GetMapping("/getMesage")
+//    public String getMessage() {
+//        // 获取接收到的udp数据
+//        String str = new String("recv");
+//        return str;
+//    }
+
+    @GetMapping("/autoRecog")
+    public AutoRecogResult autoRecog() {
+        // 调用研判服务
+        AutoRecogResult recogResult = new AutoRecogResult();
+        recogResult.setTargetModel("E-8");
+        recogResult.setTargetType(1);
+        recogResult.setCountryCode("美国");
+        recogResult.setStartPlace("嘉手那");
+        // 生成属性符合概率
+        return recogResult;
+    }
+
+    @GetMapping("/selectLine")
     public List<TGlTrackline> select() {
         return judgeService.get();
     }
 
+    @GetMapping("/selectRecog")
+    public List<TYpTargetRecog> selectRecog() {
+        return targetRecogService.get();
+    }
     @PostMapping("/trainDt")
     public void train(@RequestParam(value = "data_path") String data_path, @RequestParam(value = "targetAttr") String targetAttr) {
         judgeService.trainDt(data_path, targetAttr);

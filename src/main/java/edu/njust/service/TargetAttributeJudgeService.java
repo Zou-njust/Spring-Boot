@@ -34,20 +34,20 @@ public class TargetAttributeJudgeService {
     // 基于典型航线研判MB属性
     public String predictAttr(Map<String, String> map, TreeNode node) {
         List<TreeNode> childList = node.getChildTreeNode();
-        if(childList == null){
-            return null;
-        }
-        if(childList.size() == 0) {
+        if(childList != null){
+            if(childList.size() == 0) {
+                return node.getTargetValue();
+            }
+            String value = map.get(childList.get(0).getAttributeName());
+            for(TreeNode next : childList) {
+                String t = next.getAttributeValue();
+                if(value.compareTo(t) == 0) {
+                    predictAttr(map,next);
+                }
+            }
             return node.getTargetValue();
         }
-        String value = map.get(childList.get(0).getAttributeName());
-        for(TreeNode next : childList) {
-            String t = next.getAttributeValue();
-            if(value.compareTo(t) == 0) {
-                predictAttr(map,next);
-            }
-        }
-        return node.getTargetValue();
+        else return null;
     }
 
     //

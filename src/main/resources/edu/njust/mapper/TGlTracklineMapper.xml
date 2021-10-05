@@ -219,4 +219,46 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+  <update id="updateByPrimaryKeySelective" parameterType="edu.njust.model.TGlTrackline">
+    update t_gl_trackline
+    <set>
+      <if test="targetId != null">
+        target_id = #{targetId,jdbcType=VARCHAR},
+      </if>
+      <if test="targetSort != null">
+        target_sort = #{targetSort,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="takeoffAirportId != null">
+        takeoff_airport_id = #{takeoffAirportId,jdbcType=VARCHAR},
+      </if>
+      <if test="landingAirportId != null">
+        landing_airport_id = #{landingAirportId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskActionAreaId != null">
+        task_action_area_id = #{taskActionAreaId,jdbcType=VARCHAR},
+      </if>
+      <if test="savePath != null">
+        save_path = #{savePath,jdbcType=VARCHAR},
+      </if>
+      <if test="importTime != null">
+        import_time = #{importTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="edu.njust.model.TGlTrackline">
+    update t_gl_trackline
+    set target_id = #{targetId,jdbcType=VARCHAR},
+      target_sort = #{targetSort,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      takeoff_airport_id = #{takeoffAirportId,jdbcType=VARCHAR},
+      landing_airport_id = #{landingAirportId,jdbcType=VARCHAR},
+      task_action_area_id = #{taskActionAreaId,jdbcType=VARCHAR},
+      save_path = #{savePath,jdbcType=VARCHAR},
+      import_time = #{importTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
 </mapper>
