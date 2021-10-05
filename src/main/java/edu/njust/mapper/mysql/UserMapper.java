@@ -1,6 +1,6 @@
-package edu.njust.mapper;
+package edu.njust.mapper.mysql;
 
-import edu.njust.model.UserModel;
+import edu.njust.model.mysql.UserModel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
