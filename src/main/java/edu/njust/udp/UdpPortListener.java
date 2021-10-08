@@ -21,7 +21,7 @@ public class UdpPortListener implements ServletContextListener {
     //限制最大数据量
     public static final int MAX_UDP_DATA_SIZE = 4096;
     //监听端口8081
-    public static final int UDP_PORT = 8081;
+    public static final int UDP_PORT = 8085;
     //接收的数据报
     public DatagramPacket dgPacket = null;
     //连接的套接字
