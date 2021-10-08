@@ -10,6 +10,7 @@ import java.util.Map;
 @RestController
 @Scope("prototype")
 @RequestMapping("/msg")
+@CrossOrigin
 public class MsgController {
 
     @GetMapping(value = "/get")
@@ -26,7 +27,7 @@ public class MsgController {
     }
 
     @PostMapping(value = "/write")
-    public void writeText(@RequestParam Map<String, String> set) {
+    public void writeText(@RequestBody Map<String, String> set) {
         try {
             File file = new File("udpData.txt");
             if(!file.isFile()) {
