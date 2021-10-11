@@ -38,10 +38,10 @@ public class TargetAttributeJudgeController {
     public AutoRecogResult autoRecog() {
         // 调用研判服务
         AutoRecogResult recogResult = new AutoRecogResult();
-        recogResult.setTargetModel("E-8");
-        recogResult.setTargetType(1);
+        recogResult.setTargetModel("B-52");
+        recogResult.setTargetType(4);
         recogResult.setCountryCode("美国");
-        recogResult.setStartPlace("嘉手那");
+        recogResult.setStartPlace("关岛");
         // 生成属性符合概率
         return recogResult;
     }

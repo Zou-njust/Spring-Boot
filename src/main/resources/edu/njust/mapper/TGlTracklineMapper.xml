@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.njust.mapper.TGlTracklineMapper">
   <resultMap id="BaseResultMap" type="edu.njust.model.TGlTrackline">
-    <result column="id" jdbcType="VARCHAR" property="id" />
+    <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="target_id" jdbcType="VARCHAR" property="targetId" />
     <result column="target_sort" jdbcType="VARCHAR" property="targetSort" />
     <result column="name" jdbcType="VARCHAR" property="name" />
@@ -88,6 +88,16 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_gl_trackline
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_gl_trackline
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
   <delete id="deleteByExample" parameterType="edu.njust.model.TGlTracklineExample">
     delete from t_gl_trackline
     <if test="_parameter != null">
