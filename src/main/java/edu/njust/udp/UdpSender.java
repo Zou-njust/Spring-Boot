@@ -10,7 +10,7 @@ public class UdpSender {
     // 目标端口
     public static final int SERVER_PORT = 4001;
     // 本地端口
-    public static final int LOCAL_PORT = 8081;
+    public static final int LOCAL_PORT = 8085;
 
     // 发送String
     public void send(String data) {

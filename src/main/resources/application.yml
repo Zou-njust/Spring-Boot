@@ -1,15 +1,25 @@
 #server
 server:
-  port: 8080
+  port: 8082
 #spring
 spring:
+  neo4j:
+    url: bolt://localhost:7687
+    username: neo4j
+    password: 123456
   #datasource
   datasource:
+    mysql:
     #database
-    url: jdbc:mysql://127.0.0.1:3306/intention?serverTimezone=GMT%2B8
-    username: root
-    password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://127.0.0.1:3306/intention?serverTimezone=GMT%2B8
+      username: root
+      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+#    oracle:
+#      jdbc-url: jdbc:oracle:thin:@//192.168.25.200:1521/ORCL
+#      username: bn
+#      password: 123456
+#      driverClassName: oracle.jdbc.driver.OracleDriver
     #druid
     type: com.alibaba.druid.pool.DruidDataSource
     filters: stat
@@ -27,5 +37,5 @@ spring:
     maxOpenPreparedStatements: 20
 #mybatis
 mybatis:
-  mapper-locations: classpath*:mapper/*.xml
+  mapper-locations: classpath*:mapper/*.xml,edu.njust.mapper/*.xml
   type-aliases-package: classpath*:edu.njust.model

@@ -1,4 +1,4 @@
-package edu.njust.model;
+package edu.njust.model.mysql;
 
 public class UserModel {
     private int userid;
