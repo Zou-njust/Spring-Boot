@@ -62,8 +62,33 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
     }
 
     @Override
-    public GraphVO queryNodeNeighbour(Long nodeId) {
-        return null;
+    public GraphVO queryNodeNeighbour(String nodeId,String domain) {
+        HashMap<String, Object> graph = ikGraphRepository.getmorerelationnode(domain,nodeId);
+        //System.out.println("关系" + graph);
+        GraphVO graphVO = new GraphVO();
+        graphVO.setLinks((List<RelationVO>)graph.get("relationship"));
+        //graphVO.setNodes((List<NodeVO>)graph.get("node"));
+
+        //System.out.println("关系转换: " + graphVO.getLinks() + ' ' + graphVO.getNodes());
+
+        List<NodeVO> nodes = graphQueryUtils.findGraphNode(String.format(GraphQueryUtils.LINKNODE_ID, domain, nodeId));
+        System.out.println("nodes" + nodes);
+        List<NodeVO> nodesAfter = new ArrayList<NodeVO>();
+        for (NodeVO node1 : nodes) {
+            int flag = 0;
+            for(NodeVO node2 : nodesAfter){
+                if(node2.getId().equals(node1.getId())){
+                    flag = 1;
+                    break;
+                }
+            }
+            if(flag == 0)
+                nodesAfter.add(node1);
+
+        }
+        System.out.println("afterNodes" + nodesAfter);
+        graphVO.setNodes(nodesAfter);
+        return graphVO;
     }
 
     @Override

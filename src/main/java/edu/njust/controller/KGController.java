@@ -5,6 +5,7 @@ import edu.njust.api.CommonResult;
 import edu.njust.entity.DataGraph;
 import edu.njust.entity.QAEntityItem;
 import edu.njust.service.IKnowGraphControlService;
+import edu.njust.vo.GraphVO;
 import edu.njust.vo.NodeVO;
 import edu.njust.vo.RelationVO;
 import io.swagger.annotations.ApiOperation;
@@ -37,6 +38,16 @@ public class KGController {
     @GetMapping("searchNodeById")
     public CommonResult<NodeVO> searchNodeById(@RequestParam(value = "id") String id) {
         return CommonResult.success(service.queryNode(Integer.parseInt(id)));
+    }
+    @GetMapping("searchNodeAndRel")
+    public CommonResult<DataGraph<List<?>>> searchNodeAndRel(@RequestParam(value = "id") String id,
+                                                  @RequestParam(value = "domain") String domain) {
+        GraphVO graphVO = service.queryNodeNeighbour(id,domain);
+        List<NodeVO> node = graphVO.getNodes();
+        List<RelationVO> link = graphVO.getLinks();
+        System.out.println("节点：" + node);
+        System.out.println("关系：" + link);
+        return CommonResult.success(new DataGraph<>(node, link));
     }
     @GetMapping("createNode")
     public CommonResult<NodeVO> createNode(@RequestParam(value = "domain") String domain,@RequestParam(value = "name")String name,

@@ -74,21 +74,10 @@ public class UdpPortListener implements ServletContextListener {
             String srt = new String(buffer, "UTF-8").trim();
             Timestamp timestamp = new Timestamp(new Date().getTime());
             System.out.println("======= " + srt + " | " + timestamp.toString() + " ======");
-            try {
-                File writeName = new File("udpData.txt");
-                if(!writeName.isFile()) {
-                    writeName.createNewFile();
-                }
-                BufferedWriter bw = new BufferedWriter(new FileWriter(writeName));
-                bw.write(srt+"\r\n");
-                bw.flush();
-                bw.close();
-            } catch(Exception e) {
-                e.printStackTrace();}
             UdpDataModel udpDataModel = new UdpDataModel();
             udpDataModel.setOrigin(srt);
             udpDataModel.setTimestamp(timestamp);
-            if(udpDataModelList.size()==1000){
+            if(udpDataModelList.size()==10000){
                 udpDataModelList.clear();
             }
             udpDataModelList.add(udpDataModel);
