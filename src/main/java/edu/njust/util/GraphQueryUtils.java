@@ -49,7 +49,7 @@ public class GraphQueryUtils {
     public static final String REL_NEIGHBOUR = "MATCH p=(h)-[]-() WHERE id(h)=%d RETURN p";
     public static final String REL_TYPE_NEIGHBOUR = "MATCH p=(h)-[:%s]-() WHERE id(h)=%d RETURN p";
     public static final String NODE_BY_ID = "MATCH (h) WHERE id(h)=%d RETURN h";
-
+    public static final String LINKNODE_ID = "MATCH (n:`%s`) -[r]-(m) where id(n)=%s  return n,m limit 100";
     public static final String REL_TYPE_NODE = "MATCH (h)-[r]-() WHERE id(h)=%d RETURN distinct type(r)";
     public static final String REL_TYPE_AND_NODE_TYPE_NODE = "MATCH (h)-[r]-(t) WHERE id(h)=%d RETURN type(r), labels(t)";
     /**
@@ -96,7 +96,6 @@ public class GraphQueryUtils {
         String cypher = String.format(NODE_BY_ID, id);
         return findFirstNode(cypher);
     }
-
     /**
      * 为某个标签创建唯一性约束
      *
