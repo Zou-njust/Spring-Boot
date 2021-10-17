@@ -48,7 +48,7 @@ public interface IKnowGraphControlService {
      * @param nodeId 节点ID
      * @return 图谱显示对象
      */
-    GraphVO queryNodeNeighbour(Long nodeId);
+    GraphVO queryNodeNeighbour(String nodeId,String domain);
 
     /**
      * 查询所有的Label
