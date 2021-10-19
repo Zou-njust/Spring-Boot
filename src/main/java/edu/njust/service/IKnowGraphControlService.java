@@ -35,6 +35,15 @@ public interface IKnowGraphControlService {
     NodeVO queryNode(Integer id);
 
     /**
+     * 查询Node
+     *
+     * @param label    节点类型
+     * @param property 属性
+     * @param value    值
+     * @return node
+     */
+    List<NodeVO> findNodeByName(String label, String property, String value);
+    /**
      * 根据名称查询节点
      *
      * @param name 名称，后续用于显示节点信息

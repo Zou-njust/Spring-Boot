@@ -34,7 +34,12 @@ public class KGController {
         System.out.println("关系：" + link);
         return CommonResult.success(new DataGraph<>(node, link));
     }
-
+    @GetMapping("searchNodeByName")
+    public CommonResult<List<NodeVO>> getProperties(@RequestParam(value = "label") String label,
+                                                    @RequestParam(value = "property") String property,
+                                                    @RequestParam(value = "value") String value) {
+        return CommonResult.success(service.findNodeByName(label, property, value));
+    }
     @GetMapping("searchNodeById")
     public CommonResult<NodeVO> searchNodeById(@RequestParam(value = "id") String id) {
         return CommonResult.success(service.queryNode(Integer.parseInt(id)));

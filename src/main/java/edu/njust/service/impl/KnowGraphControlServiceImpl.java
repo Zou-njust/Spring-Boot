@@ -62,6 +62,10 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
     }
 
     @Override
+    public List<NodeVO> findNodeByName(String label, String property, String value) {
+        return graphQueryUtils.findNodeByName(label, property,value);
+    }
+    @Override
     public GraphVO queryNodeNeighbour(String nodeId,String domain) {
         HashMap<String, Object> graph = ikGraphRepository.getmorerelationnode(domain,nodeId);
         //System.out.println("关系" + graph);

@@ -117,6 +117,17 @@ public class GraphQueryUtils {
     }
 
     /**
+     * 查询节点
+     *
+     * @param label    Label
+     * @param property 属性
+     * @return 节点VO
+     */
+    public List<NodeVO> findNodeByName(String label, String property, String value) {
+        String cypher = String.format(NODE_PROPERTY, label,property,value);
+        return findGraphNode(cypher);
+    }
+    /**
      * 查询图谱中的所有Label
      *
      * @return label

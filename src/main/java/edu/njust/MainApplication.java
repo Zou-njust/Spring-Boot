@@ -26,11 +26,11 @@ public class MainApplication {
         SpringApplication.run(MainApplication.class, args);
     }
 
-//    @Bean(destroyMethod = "close", initMethod = "init")
-//    @ConfigurationProperties(prefix = "spring.datasource")
-//    public DruidDataSource druidDataSource() {
-//        DruidDataSource druidDataSource = new DruidDataSource();
-//        return  druidDataSource;
-//    }
+    @Bean(destroyMethod = "close", initMethod = "init")
+    @ConfigurationProperties(prefix = "spring.datasource")
+    public DruidDataSource druidDataSource() {
+        DruidDataSource druidDataSource = new DruidDataSource();
+        return  druidDataSource;
+    }
 
 }
