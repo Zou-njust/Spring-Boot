@@ -27,12 +27,6 @@ public class TargetAttributeJudgeController {
     @Resource
     private TYpTargetRecogService targetRecogService;
 
-//    @GetMapping("/getMesage")
-//    public String getMessage() {
-//        // 获取接收到的udp数据
-//        String str = new String("recv");
-//        return str;
-//    }
 
     @GetMapping("/autoRecog")
     public AutoRecogResult autoRecog() {
@@ -75,4 +69,6 @@ public class TargetAttributeJudgeController {
         String targetValue = judgeService.predictAttr(map, node);
         return targetRecogService.getResult(targetValue);
     }
+//    @GetMapping('/result')
+//    public
 }
