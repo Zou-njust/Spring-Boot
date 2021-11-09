@@ -7,6 +7,9 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/*
+json数据监听端口
+ */
 public class port01 {
     public static void main(String[] args) {
         try {

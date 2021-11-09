@@ -1,118 +1,87 @@
 package edu.njust.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class TYpTargetRecog implements Serializable {
-    private Integer id;
+public class TYpTargetRecog {
+    private String ID;
+    private String TargetID;
+    private String PointID;
+    private int TargetType;
+    private String ArtifactID;
+    private String TargetName;
+    private int JudgeMeans;
+    private double Probablity;
+    private Date ImportTime;
 
-    private String targetId;
-
-    private Byte targetType;
-
-    private String pointId;
-
-    private String aircraftId;
-
-    private String targetName;
-
-    private Byte judgeMeans;
-
-    private Byte probability;
-
-    private Date importTime;
-
-    private static final long serialVersionUID = 1L;
-
-    public Integer getId() {
-        return id;
+    public String getID() {
+        return ID;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
-    public String getTargetId() {
-        return targetId;
+    public String getArtifactID() {
+        return ArtifactID;
     }
 
-    public void setTargetId(String targetId) {
-        this.targetId = targetId;
-    }
-
-    public Byte getTargetType() {
-        return targetType;
-    }
-
-    public void setTargetType(Byte targetType) {
-        this.targetType = targetType;
-    }
-
-    public String getPointId() {
-        return pointId;
-    }
-
-    public void setPointId(String pointId) {
-        this.pointId = pointId;
-    }
-
-    public String getAircraftId() {
-        return aircraftId;
-    }
-
-    public void setAircraftId(String aircraftId) {
-        this.aircraftId = aircraftId;
-    }
-
-    public String getTargetName() {
-        return targetName;
-    }
-
-    public void setTargetName(String targetName) {
-        this.targetName = targetName;
-    }
-
-    public Byte getJudgeMeans() {
-        return judgeMeans;
-    }
-
-    public void setJudgeMeans(Byte judgeMeans) {
-        this.judgeMeans = judgeMeans;
-    }
-
-    public Byte getProbability() {
-        return probability;
-    }
-
-    public void setProbability(Byte probability) {
-        this.probability = probability;
+    public void setArtifactID(String artifactID) {
+        ArtifactID = artifactID;
     }
 
     public Date getImportTime() {
-        return importTime;
+        return ImportTime;
     }
 
     public void setImportTime(Date importTime) {
-        this.importTime = importTime;
+        ImportTime = importTime;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", targetId=").append(targetId);
-        sb.append(", targetType=").append(targetType);
-        sb.append(", pointId=").append(pointId);
-        sb.append(", aircraftId=").append(aircraftId);
-        sb.append(", targetName=").append(targetName);
-        sb.append(", judgeMeans=").append(judgeMeans);
-        sb.append(", probability=").append(probability);
-        sb.append(", importTime=").append(importTime);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+    public int getJudgeMeans() {
+        return JudgeMeans;
+    }
+
+    public void setJudgeMeans(int judgeMeans) {
+        JudgeMeans = judgeMeans;
+    }
+
+    public String getPointID() {
+        return PointID;
+    }
+
+    public void setPointID(String pointID) {
+        PointID = pointID;
+    }
+
+    public int getTargetType() {
+        return TargetType;
+    }
+
+    public void setTargetType(int targetType) {
+        TargetType = targetType;
+    }
+
+    public String getTargetName() {
+        return TargetName;
+    }
+
+    public void setTargetName(String targetName) {
+        TargetName = targetName;
+    }
+
+    public String getTargetID() {
+        return TargetID;
+    }
+
+    public void setTargetID(String targetID) {
+        TargetID = targetID;
+    }
+
+    public double getProbablity() {
+        return Probablity;
+    }
+
+    public void setProbablity(double probablity) {
+        Probablity = probablity;
     }
 }

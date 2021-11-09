@@ -6,10 +6,15 @@ spring:
   #datasource
   datasource:
     #database
-    url: jdbc:mysql://127.0.0.1:3306/intention?serverTimezone=GMT%2B8
-    username: root
-    password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://127.0.0.1:3306/intention?serverTimezone=GMT%2B8
+#    username: root
+#    password: root
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+    #oracle connection
+    url: jdbc:oracle:thin:@//localhost:1521/orcl
+    username: bn
+    password: 123456
+    driver-class-name: oracle.jdbc.driver.OracleDriver
     #druid
     type: com.alibaba.druid.pool.DruidDataSource
     filters: stat
