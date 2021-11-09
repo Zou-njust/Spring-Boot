@@ -253,7 +253,6 @@ public class KGraphRepository implements IKGraphRepository {
 		}
 		return result;
 	}
-
 	/**
 	 * 更新节点名称
 	 * 

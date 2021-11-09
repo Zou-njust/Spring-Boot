@@ -38,16 +38,27 @@ public class GraphQueryUtils {
      */
     public static final String CALL_LABEL = "CALL db.labels()";
     /**
+     * 查询某个图谱Node类型
+     */
+    public static final String CALL_DOMAIN_LABEL = "MATCH (n:`%s`) RETURN labels(n)";
+    /**
+     * 查询某个图谱Node的property类型
+     */
+    public static final String CALL_DOMAIN_LABEL_PROPERTY = "MATCH (n:`%s`:`%s`) RETURN distinct keys(n)";
+    /**
      * 查询图谱中的关系类型
      */
     public static final String CALL_REL = "CALL db.relationshipTypes()";
     public static final String LABEL_KEY = "CALL db.schema.nodeTypeProperties() yield nodeLabels,propertyName\n" +
             "WITH nodeLabels,propertyName WHERE \"%s\" in nodeLabels\n" +
             "RETURN propertyName";
-    public static final String NODE_PROPERTY = "MATCH (n:`%s`) WHERE n.%s CONTAINS '%s' RETURN n;";
+    public static final String NODE_PROPERTY = "MATCH (n:`%s`) WHERE n.%s RETURN n;";
+    public static final String NODE_PROPERTY_DOMAIN = "MATCH (n:`%s`:`%s`) WHERE n.`%s` = '%s' RETURN n;";
+    public static final String NODE_PROPERTY_DOMAIN_NOVALUE = "MATCH (n:`%s`:`%s`) WHERE EXISTS(n.`%s`) RETURN n;";
     public static final String NODE_LABLE = "MATCH (n:`%s`) RETURN n;";
     public static final String REL_NEIGHBOUR = "MATCH p=(h)-[]-() WHERE id(h)=%d RETURN p";
     public static final String REL_TYPE_NEIGHBOUR = "MATCH p=(h)-[:%s]-() WHERE id(h)=%d RETURN p";
+    public static final String SEARCH_BY_REL = "match(n:`%s`) -[m:`%s`]->(p) return n,p,m;";
     public static final String NODE_BY_ID = "MATCH (h) WHERE id(h)=%d RETURN h";
     public static final String LINKNODE_ID = "MATCH (n:`%s`) -[r]-(m) where id(n)=%s  return n,m limit 100";
     public static final String REL_TYPE_NODE = "MATCH (h)-[r]-() WHERE id(h)=%d RETURN distinct type(r)";
@@ -79,6 +90,7 @@ public class GraphQueryUtils {
      * 事件节点Label
      */
     public static final String CREATE_NODE= "  return *";
+
 
     private Driver driver;
 
@@ -130,7 +142,51 @@ public class GraphQueryUtils {
         }
         return labels;
     }
+    /**
+     * 查询domain图谱中的所有Label
+     *
+     * @return label
+     */
+    public Set<String> findDomainLabel(String domain) {
+        Set<String> labels = new HashSet<>();
+        StatementResult result = runCypher(String.format(CALL_DOMAIN_LABEL, domain));
+        while (result.hasNext()) {
+            Record record = result.next();
+            //if(!record.values().get(0).get(0).toString().replace("\"", "").equals(domain))
+            labels.add(record.values().get(0).get(0).toString().replace("\"", ""));
+            //if(!record.values().get(0).get(1).toString().replace("\"", "").equals(domain))
+            labels.add(record.values().get(0).get(1).toString().replace("\"", ""));
+        }
+        System.out.println(labels);
+        return labels;
+    }
+    /**
+     * 查询domain图谱中的所有Label
+     *
+     * @return label
+     */
+    public Set<String> findDomainLabelProperty(String domain, String label) {
+        Set<String> labels = new HashSet<>();
+        StatementResult result = runCypher(String.format(CALL_DOMAIN_LABEL_PROPERTY, domain, label));
+        while (result.hasNext()) {
+            Record record = result.next();
+            System.out.println(record.values());
+            for(int i = 0; i <record.values().size(); i++){
+                for(int j = 0; j < record.values().get(i).size(); j++){
+                    labels.add(record.values().get(i).get(j).toString().replace("\"", ""));
+                }
+            }
+                    /*
+            if(!record.values().get(0).get(0).toString().replace("\"", "").equals(domain))
+                labels.add(record.values().get(0).get(0).toString().replace("\"", ""));
+            if(!record.values().get(0).get(1).toString().replace("\"", "").equals(domain))
+                labels.add(record.values().get(0).get(1).toString().replace("\"", ""));
 
+                     */
+        }
+        System.out.println(labels);
+        return labels;
+    }
     /**
      * 查询图谱中的所有关系
      *
@@ -193,11 +249,19 @@ public class GraphQueryUtils {
     public GraphVO findNeighbour(Long id, String rel) {
         return findAllGraph(String.format(REL_TYPE_NEIGHBOUR, rel, id));
     }
-
     public GraphVO findNeighbour(Long id) {
         return findAllGraph(String.format(REL_NEIGHBOUR, id));
     }
-
+    /**
+     * 根据关系名查询
+     *
+     * @param domain  领域
+     * @param relName 关系名
+     * @return 图
+     */
+    public GraphVO searchByRel(String domain, String relName) {
+        return findAllGraph(String.format(SEARCH_BY_REL, domain, relName));
+    }
     /**
      * 根据时间区间查询当前节点连接的事件节点
      *

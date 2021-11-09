@@ -65,7 +65,6 @@ public interface IKGraphRepository {
 	 * @return
 	 */
 	HashMap<String, Object> getmorerelationnode(String domain, String nodeid);
-
 	/**
 	 * 更新节点名称
 	 * 

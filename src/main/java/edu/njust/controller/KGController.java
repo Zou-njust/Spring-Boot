@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @Scope("prototype")
@@ -27,26 +28,45 @@ public class KGController {
     //获取图谱页面
     @GetMapping("getGraph")
     public CommonResult<DataGraph<List<?>>> getSLGraph(@RequestParam(value = "domain") String domain) {
-        long startTime = System.currentTimeMillis();
         List<NodeVO> node = service.queryNodeByLabel(domain);
         List<RelationVO> link = service.queryDomainRelation(domain);
-        System.out.println("节点：" + node);
-        System.out.println("关系：" + link);
+        //System.out.println("节点：" + node);
+        //System.out.println("关系：" + link);
         return CommonResult.success(new DataGraph<>(node, link));
     }
-
+    @GetMapping("getLabel")
+    public CommonResult<Set<String>> getLabel(@RequestParam(value = "domain") String domain) {
+        return CommonResult.success(service.getLabel(domain));
+    }
+    @GetMapping("getLabelProperty")
+    public CommonResult<Set<String>> getLabelProperty(@RequestParam(value = "domain") String domain, @RequestParam(value = "label") String label){
+        return CommonResult.success(service.getLabelProperty(domain,label));
+    }
     @GetMapping("searchNodeById")
     public CommonResult<NodeVO> searchNodeById(@RequestParam(value = "id") String id) {
         return CommonResult.success(service.queryNode(Integer.parseInt(id)));
     }
-    @GetMapping("searchNodeAndRel")
-    public CommonResult<DataGraph<List<?>>> searchNodeAndRel(@RequestParam(value = "id") String id,
-                                                  @RequestParam(value = "domain") String domain) {
-        GraphVO graphVO = service.queryNodeNeighbour(id,domain);
+    @GetMapping("searchByProperty")
+    public CommonResult<List<NodeVO>> searchByProperty(@RequestParam(value = "domain") String domain, @RequestParam(value = "label") String label, @RequestParam(value = "property") String property, @RequestParam(value = "propertyInput") String propertyInput) {
+        return CommonResult.success(service.searchByProperty(domain,label,property,propertyInput));
+    }
+    @GetMapping("searchByRel")
+    public CommonResult<DataGraph<List<?>>> searchByRel(@RequestParam(value = "domain") String domain, @RequestParam(value = "relName") String relName){
+        GraphVO graphVO = service.searchByRel(domain,relName);
         List<NodeVO> node = graphVO.getNodes();
         List<RelationVO> link = graphVO.getLinks();
         System.out.println("节点：" + node);
         System.out.println("关系：" + link);
+        return CommonResult.success(new DataGraph<>(node, link));
+    }
+    @GetMapping("searchNodeAndRel")
+    public CommonResult<DataGraph<List<?>>> searchNodeAndRel(@RequestParam(value = "id") String id,
+                                                  @RequestParam(value = "domain") String domain) {
+        GraphVO graphVO = service.queryNodeNeighbour(domain,id);
+        List<NodeVO> node = graphVO.getNodes();
+        List<RelationVO> link = graphVO.getLinks();
+        //System.out.println("节点：" + node);
+        //System.out.println("关系：" + link);
         return CommonResult.success(new DataGraph<>(node, link));
     }
     @GetMapping("createNode")

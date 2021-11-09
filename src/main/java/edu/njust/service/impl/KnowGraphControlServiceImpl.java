@@ -62,7 +62,7 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
     }
 
     @Override
-    public GraphVO queryNodeNeighbour(String nodeId,String domain) {
+    public GraphVO queryNodeNeighbour(String domain, String nodeId) {
         HashMap<String, Object> graph = ikGraphRepository.getmorerelationnode(domain,nodeId);
         //System.out.println("关系" + graph);
         GraphVO graphVO = new GraphVO();
@@ -251,5 +251,29 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
         }catch (Exception e){
             throw e;
         }
+    }
+    @Override
+    public Set<String> getLabel(String domain){
+        return graphQueryUtils.findDomainLabel(domain);
+    }
+    @Override
+    public Set<String> getLabelProperty(String domain, String label){
+        return graphQueryUtils.findDomainLabelProperty(domain, label);
+    }
+    @Override
+    public List<NodeVO> searchByProperty(String domain, String label, String property,String propertyInput){
+        List<NodeVO> nodes;
+        if(propertyInput.isEmpty())
+            nodes = graphQueryUtils.findGraphNode(String.format(GraphQueryUtils.NODE_PROPERTY_DOMAIN_NOVALUE, domain, label, property));
+        else
+            nodes = graphQueryUtils.findGraphNode(String.format(GraphQueryUtils.NODE_PROPERTY_DOMAIN, domain, label, property, propertyInput));
+
+        return nodes;
+    }
+    @Override
+    public GraphVO searchByRel(String domain,String relName) {
+        GraphVO graph = graphQueryUtils.searchByRel(domain,relName);
+        //System.out.println("关系" + graph);
+        return graph;
     }
 }
