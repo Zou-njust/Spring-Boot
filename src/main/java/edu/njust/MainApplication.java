@@ -5,6 +5,7 @@ import edu.njust.udp.UdpPortListener;
 import edu.njust.udp.UdpServer;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -26,11 +27,11 @@ public class MainApplication {
         SpringApplication.run(MainApplication.class, args);
     }
 
-    @Bean(destroyMethod = "close", initMethod = "init")
-    @ConfigurationProperties(prefix = "spring.datasource")
-    public DruidDataSource druidDataSource() {
-        DruidDataSource druidDataSource = new DruidDataSource();
-        return  druidDataSource;
-    }
+//    @Bean(destroyMethod = "close", initMethod = "init")
+//    @ConfigurationProperties(prefix = "spring.datasource")
+//    public DruidDataSource druidDataSource() {
+//        DruidDataSource druidDataSource = new DruidDataSource();
+//        return  druidDataSource;
+//    }
 
 }
