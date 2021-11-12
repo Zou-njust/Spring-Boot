@@ -111,7 +111,13 @@ public interface IKnowGraphControlService {
      * @return Graph
      */
     GraphVO queryEventNeighbour(Long id, String rel, String startTime, String endTime);
-
+    /**
+     * 根据关系名查询图谱
+     * @param domain 图谱领域
+     * @param relName 关系名称
+     * @return Graph
+     */
+    public GraphVO searchByRel(String domain, String relName);
     /**
      * 查询Node
      *
@@ -180,9 +186,33 @@ public interface IKnowGraphControlService {
     /**
      * 创建单个节点
      *
-     * @param domain
-     * @param entity
-     * @return
+     * @param domain 节点领域
+     * @param type 节点类型
+     * @param property 节点属性
+     * @return 创建节点ID
      */
     Integer createNode(String domain, String type,Map<String,Object> property);
+    /**
+     * 获取图谱标签
+     *
+     * @param domain 节点领域
+     * @return 图谱所有标签类型
+     */
+    Set<String> getLabel(String domain);
+    /**
+     * 获取标签属性名
+     * @param domain 节点领域
+     * @param label 节点标签
+     * @return 图谱该标签所有属性名
+     */
+    Set<String> getLabelProperty(String domain, String label);
+    /**
+     * 根据标签属性名搜索
+     * @param domain 节点领域
+     * @param label 节点标签
+     * @param property 节点属性
+     * @param propertyInput 节点属性值
+     * @return 查询到的节点
+     */
+    List<NodeVO> searchByProperty(String domain, String label, String property,String propertyInput);
 }
