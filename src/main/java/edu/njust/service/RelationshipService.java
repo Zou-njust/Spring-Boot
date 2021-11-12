@@ -19,4 +19,16 @@ public class RelationshipService {
     public List<Relationship> findRelationshipByTo(int to){
         return relationshipMapper.findRelationshipByTo(to);
     }
+
+    public List<Relationship> findAllRelationship(){
+        return relationshipMapper.findAllRelationship();
+    }
+
+    public int deleteRelationshipById(int id){
+        return relationshipMapper.deleteRelationshipById(id);
+    }
+
+    public List<Relationship> findRelationshipsById(int id){
+        return relationshipMapper.findRelationshipsById(id);
+    }
 }
