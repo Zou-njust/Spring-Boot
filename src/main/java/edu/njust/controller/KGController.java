@@ -40,11 +40,6 @@ public class KGController {
                                                     @RequestParam(value = "property") String property,
                                                     @RequestParam(value = "value") String value) {
         return CommonResult.success(service.findNodeByName(label, property, value));
-        List<NodeVO> node = service.queryNodeByLabel(domain);
-        List<RelationVO> link = service.queryDomainRelation(domain);
-        //System.out.println("节点：" + node);
-        //System.out.println("关系：" + link);
-        return CommonResult.success(new DataGraph<>(node, link));
     }
     @GetMapping("getLabel")
     public CommonResult<Set<String>> getLabel(@RequestParam(value = "domain") String domain) {
