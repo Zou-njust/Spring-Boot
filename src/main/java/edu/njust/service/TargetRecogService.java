@@ -14,5 +14,4 @@ public interface TargetRecogService {
     // 输出综合研判概率
     public RecogResult finalRecog(List<RecogResult> resultSet);
 
-    List<Membership> selectAll();
 }
