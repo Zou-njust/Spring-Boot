@@ -325,4 +325,67 @@ public class ThreatAnalysis {
         }
 
     }
+
+    public boolean addNode(String name, List<String> states, List<Integer> parents, List<Integer> children){
+        edu.njust.model.oracle.Node node = new edu.njust.model.oracle.Node();
+        node.setType(type);
+        node.setName(name);
+        StringBuilder sb;
+        sb = new StringBuilder();
+        for (int i = 0; i < states.size(); i ++){
+            sb.append(states.get(i));
+            if (i < states.size() - 1){
+                sb.append(",");
+            }
+        }
+        node.setState(sb.toString());
+        node.setCpt("null");
+        nodeService.addNode(node);
+
+        int id = nodeService.findIdByNameAndType(name, type);
+        for (Integer i : parents){
+            Relationship relationship = new Relationship();
+            relationship.setFrom(i);
+            relationship.setTo(id);
+            relationshipService.addRelationship(relationship);
+        }
+
+        for (Integer i : children){
+            Relationship relationship = new Relationship();
+            relationship.setFrom(id);
+            relationship.setTo(i);
+            relationshipService.addRelationship(relationship);
+        }
+
+        if (hasCircle(id)){
+            nodeService.deleteNodeNyId(id);
+            relationshipService.deleteRelationshipById(id);
+
+            return false;
+        }
+        return true;
+    }
+
+    public boolean hasCircle(int id){
+        List<Relationship> graph = relationshipService.findAllRelationship();
+        Queue<List<Integer>> queue = new LinkedList<>();
+        List<Integer> list = new ArrayList<>();
+        list.add(id);
+        queue.offer(list);
+        while (!queue.isEmpty()){
+            List<Integer> l = queue.poll();
+            int n = l.get(l.size()-1);
+            for (Relationship r : graph){
+                if (n == r.getFrom()){
+                    if (l.contains(r.getTo())){
+                        return true;
+                    }
+                    List<Integer> tmpList = new ArrayList<>(l);
+                    tmpList.add(r.getTo());
+                    queue.offer(tmpList);
+                }
+            }
+        }
+        return false;
+    }
 }
