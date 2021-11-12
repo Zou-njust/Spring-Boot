@@ -1,11 +1,12 @@
 package edu.njust.mapper;
 
-import com.sun.tools.javac.util.List;
 import edu.njust.model.TargetRecogWeights;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Mapper
 @Repository
