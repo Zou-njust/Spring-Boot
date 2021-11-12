@@ -1,7 +1,6 @@
 package edu.njust.service;
 import edu.njust.dto.BasicAttributes;
 import edu.njust.dto.RecogResult;
-import edu.njust.model.Membership;
 import edu.njust.model.TYpTargetRecog;
 
 import java.util.List;
