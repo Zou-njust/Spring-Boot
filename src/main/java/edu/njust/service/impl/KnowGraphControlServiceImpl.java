@@ -1,16 +1,13 @@
 package edu.njust.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import edu.njust.dal.IFieldMeanRepository;
 import edu.njust.dal.IKGraphRepository;
 import edu.njust.dal.Table2NodelLabelRepository;
 import edu.njust.entity.DataMap;
-import edu.njust.entity.QAEntityItem;
 import edu.njust.entity.dto.FieldMean;
 import edu.njust.entity.dto.Table2NodeLabel;
 import edu.njust.service.IKnowGraphControlService;
-import edu.njust.service.ITable2NeoFilterService;
 import edu.njust.util.GraphQueryUtils;
 import edu.njust.util.Neo4jUtil;
 import edu.njust.util.StringUtil;
@@ -169,15 +166,12 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
         return graphQueryUtils.findEventByTimeAndNode(id, rel, startTime, endTime);
     }
 
-    @Autowired
-    ITable2NeoFilterService table2NeoFilterService;
 
     @Override
     public List<NodeVO> queryNodeByProperty(String label, String property, String value) {
         List<NodeVO> nodes = graphQueryUtils.findGraphNode(String.format(GraphQueryUtils.NODE_PROPERTY, label, property, value));
         for (NodeVO node : nodes) {
             Map<String, Object> properties = node.getProperties();
-            table2NeoFilterService.filterFieldMean(properties, label, null, null);
             node.setProperties(properties);
         }
         return nodes;
@@ -188,7 +182,6 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
         System.out.println("nodes" + nodes);
         for (NodeVO node : nodes) {
             Map<String, Object> properties = node.getProperties();
-            table2NeoFilterService.filterFieldMean(properties, label, null, null);
             node.setProperties(properties);
         }
         return nodes;
