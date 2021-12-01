@@ -9,13 +9,13 @@ import java.util.Date;
 @Setter
 public class BasicAttributes {
 
-    private String TargetID;
-    private String PointID;
-    private double Longitude;
-    private double Latitude;
-    private double Height;
-    private double Speed;
-    private String StartPlace;
-    private String CountryCode;
-    private Date UpdateTime;
+    private String TargetID; // 目标编号
+    private String PointID; // 当前航点号
+    private double Longitude; // 经度
+    private double Latitude; // 纬度
+    private double Height; // 高度
+    private double Speed; // 速度
+    private String StartPlace; // 起飞机场
+    private String CountryCode; // 国家地区
+    private Date UpdateTime; // 更新时间
 }

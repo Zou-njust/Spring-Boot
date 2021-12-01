@@ -7,7 +7,10 @@ import edu.njust.service.TargetRecogService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -41,8 +44,39 @@ public class TargetRecogServiceImpl implements TargetRecogService {
      * @return 目标性能参数
      */
     @Override
-    public List<BasicAttributes> transferModel(List<UdpDataModel> dataModelList) {
-        return new ArrayList<>();
+    public List<BasicAttributes> transferModel(List<UdpDataModel> dataModelList) throws ParseException {
+        List<BasicAttributes> targetList = new ArrayList<>();
+        for(UdpDataModel model : dataModelList){
+
+            BasicAttributes item = new BasicAttributes();
+
+            String targetId =  model.getOrigin().substring(52, 74);
+            item.setTargetID(targetId);
+            String pointId = model.getOrigin().substring(75, 76);
+            item.setPointID(pointId);
+            // 截取经度字段
+            String longtitudeStr = model.getOrigin().substring(77, 78);
+            // 字符串转换为double
+            double longtitude = Double.parseDouble(longtitudeStr);
+            item.setLongitude(longtitude);
+            double latitude = Double.parseDouble(model.getOrigin().substring(79, 80));
+            item.setLatitude(latitude);
+            double height = Double.parseDouble(model.getOrigin().substring(81, 82));
+            item.setHeight(height);
+            double speed = Double.parseDouble(model.getOrigin().substring(88, 92));
+            item.setSpeed(speed);
+            String startPlace = model.getOrigin().substring(93, 99);
+            item.setTargetID(startPlace);
+            String countryCode = model.getOrigin().substring(100, 110);
+            item.setCountryCode(countryCode);
+            // 截取更新时间字段
+            String dateStr = model.getOrigin().substring(112, 119);
+            DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG);
+            Date date = dateFormat.parse(dateStr);
+            item.setUpdateTime(date);
+            targetList.add(item);
+        }
+        return targetList;
     }
 
     /**

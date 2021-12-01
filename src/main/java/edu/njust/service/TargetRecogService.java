@@ -4,6 +4,7 @@ import edu.njust.dto.RecogResult;
 import edu.njust.model.TYpTargetRecog;
 import edu.njust.model.UdpDataModel;
 
+import java.text.ParseException;
 import java.util.List;
 
 public interface TargetRecogService {
@@ -17,7 +18,7 @@ public interface TargetRecogService {
     // 判断接收到的数据是否为空情态势数据
     public boolean isBasisInfo(List<UdpDataModel> dataModelList);
     // 提取有效字段并转换为性能参数数据结构
-    public List<BasicAttributes> transferModel(List<UdpDataModel> dataModelList);
+    public List<BasicAttributes> transferModel(List<UdpDataModel> dataModelList) throws ParseException;
 
     // 调用性能参数匹配算法
     public RecogResult basicRecog(List<BasicAttributes> basicParams);
