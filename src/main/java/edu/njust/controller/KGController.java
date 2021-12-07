@@ -31,7 +31,7 @@ public class KGController {
         long startTime = System.currentTimeMillis();
         List<NodeVO> node = service.queryNodeByLabel(domain);
         List<RelationVO> link = service.queryDomainRelation(domain);
-        System.out.println("节点：" + node);
+        //System.out.println("节点：" + node);
         System.out.println("关系：" + link);
         return CommonResult.success(new DataGraph<>(node, link));
     }
@@ -69,7 +69,7 @@ public class KGController {
     @GetMapping("searchNodeAndRel")
     public CommonResult<DataGraph<List<?>>> searchNodeAndRel(@RequestParam(value = "id") String id,
                                                   @RequestParam(value = "domain") String domain) {
-        GraphVO graphVO = service.queryNodeNeighbour(domain,id);
+        GraphVO graphVO = service.queryNodeNeighbour(id, domain);
         List<NodeVO> node = graphVO.getNodes();
         List<RelationVO> link = graphVO.getLinks();
         //System.out.println("节点：" + node);

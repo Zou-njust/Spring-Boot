@@ -54,6 +54,7 @@ public class GraphQueryUtils {
             "RETURN propertyName";
     public static final String NODE_PROPERTY = "MATCH (n:`%s`) WHERE n.%s RETURN n;";
     public static final String NODE_PROPERTY_DOMAIN = "MATCH (n:`%s`:`%s`) WHERE n.`%s` = '%s' RETURN n;";
+    public static final String NODE_PROPERTY_DOMAIN_NUM = "MATCH (n:`%s`:`%s`) WHERE n.`%s` = %s RETURN n;";
     public static final String NODE_PROPERTY_DOMAIN_NOVALUE = "MATCH (n:`%s`:`%s`) WHERE EXISTS(n.`%s`) RETURN n;";
     public static final String NODE_LABLE = "MATCH (n:`%s`) RETURN n;";
     public static final String REL_NEIGHBOUR = "MATCH p=(h)-[]-() WHERE id(h)=%d RETURN p";
@@ -462,7 +463,7 @@ public class GraphQueryUtils {
         NodeVO nodeVO = new NodeVO();
         Map<String, Object> map = node.asMap();
         nodeVO.setId(node.id());
-        nodeVO.setName((String) map.getOrDefault("name", ""));
+        nodeVO.setName((String) map.getOrDefault("name", "").toString());
         Iterator<String> it = node.labels().iterator();
         String type = new String();
         type = it.next();
@@ -499,6 +500,7 @@ public class GraphQueryUtils {
         try {
             StatementResult result = runCypher(cypher);
             System.out.println("cypher：" + cypher);
+            System.out.println("result " + result);
             if (result.hasNext()) {
                 List<Record> records = result.list();
                 // 遍历每个记录
