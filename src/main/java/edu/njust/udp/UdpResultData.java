@@ -200,12 +200,12 @@ public class UdpResultData {
     }
 
     public static void main(String[] args) {
-        UdpResultData udp = new UdpResultData();
-        udp.createHead(164, (short)18000, (short)18001, (byte)1, new Date().getTime());
-        udp.createIdentityBody(...);
-        udp.createTail();
-        UdpSender sender = new UdpSender();
-        sender.send(udp.assembleByte());
+//        UdpResultData udp = new UdpResultData();
+//        udp.createHead(164, (short)18000, (short)18001, (byte)1, new Date().getTime());
+//        udp.createIdentityBody(...);
+//        udp.createTail();
+//        UdpSender sender = new UdpSender();
+//        sender.send(udp.assembleByte());
 
     }
 }
