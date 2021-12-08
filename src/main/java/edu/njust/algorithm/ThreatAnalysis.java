@@ -119,6 +119,8 @@ public class ThreatAnalysis {
     public Map<String, float[]> analyze(Map<String, Object> data, List<Float> intention){
         Map<String, float[]> result = new HashMap<>();
 
+        byte pingtai, wuqi, shuxing, shikong, zonghe, dengji,
+
         String[] resultNames;
         if (type == RECONNAISSANCE){
             resultNames = new String[]{"WuLiTeXing", "DianCiPingTai", "MuBiaoShuXing", "FeiXingHangXian"};
@@ -186,6 +188,19 @@ public class ThreatAnalysis {
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        pingtai = (byte)result.get("WuLiTeXing")[0];
+        if (type == RECONNAISSANCE){
+            wuqi = (byte)result.get("DianCiPingTai")[0];
+        }
+        else {
+            wuqi = (byte)result.get("WuQiPingTai")[0];
+        }
+        shuxing = (byte)result.get("MuBiaoShuXing")[0];
+        shikong = (byte)result.get("FeiXingHangXian")[0];
+        zonghe = (byte)((pingtai + wuqi + shuxing + shikong) / 4);
+        dengji = argmax(result.get("WeiXieDengJi"));
+
 
         data.put("planeType", "U-2");
         data.put("area", "关岛");
@@ -324,5 +339,80 @@ public class ThreatAnalysis {
             e.printStackTrace();
         }
 
+    }
+
+    public boolean addNode(String name, List<String> states, List<Integer> parents, List<Integer> children){
+        edu.njust.model.oracle.Node node = new edu.njust.model.oracle.Node();
+        node.setType(type);
+        node.setName(name);
+        StringBuilder sb;
+        sb = new StringBuilder();
+        for (int i = 0; i < states.size(); i ++){
+            sb.append(states.get(i));
+            if (i < states.size() - 1){
+                sb.append(",");
+            }
+        }
+        node.setState(sb.toString());
+        node.setCpt("null");
+        nodeService.addNode(node);
+
+        int id = nodeService.findIdByNameAndType(name, type);
+        for (Integer i : parents){
+            Relationship relationship = new Relationship();
+            relationship.setFrom(i);
+            relationship.setTo(id);
+            relationshipService.addRelationship(relationship);
+        }
+
+        for (Integer i : children){
+            Relationship relationship = new Relationship();
+            relationship.setFrom(id);
+            relationship.setTo(i);
+            relationshipService.addRelationship(relationship);
+        }
+
+        if (hasCircle(id)){
+            nodeService.deleteNodeNyId(id);
+            relationshipService.deleteRelationshipById(id);
+
+            return false;
+        }
+        return true;
+    }
+
+    public boolean hasCircle(int id){
+        List<Relationship> graph = relationshipService.findAllRelationship();
+        Queue<List<Integer>> queue = new LinkedList<>();
+        List<Integer> list = new ArrayList<>();
+        list.add(id);
+        queue.offer(list);
+        while (!queue.isEmpty()){
+            List<Integer> l = queue.poll();
+            int n = l.get(l.size()-1);
+            for (Relationship r : graph){
+                if (n == r.getFrom()){
+                    if (l.contains(r.getTo())){
+                        return true;
+                    }
+                    List<Integer> tmpList = new ArrayList<>(l);
+                    tmpList.add(r.getTo());
+                    queue.offer(tmpList);
+                }
+            }
+        }
+        return false;
+    }
+
+    private byte argmax(float[] data){
+        byte index = 0;
+        float maxFloat = data[0];
+        for (byte i = 1; i < data.length; i ++){
+            if (maxFloat != Float.max(maxFloat, data[i])){
+                maxFloat = Float.max(maxFloat, data[i]);
+                index = i;
+            }
+        }
+        return index;
     }
 }

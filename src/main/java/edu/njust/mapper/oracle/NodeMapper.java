@@ -1,10 +1,7 @@
 package edu.njust.mapper.oracle;
 
 import edu.njust.model.oracle.Node;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -26,5 +23,14 @@ public interface NodeMapper {
 
     @Update("UPDATE \"node\" SET \"cpt\"=#{cpt} where \"name\"=#{name}  AND \"type\"=#{type}")
     int updateCPTByNameAndType(String name, int type, String cpt);
+
+    @Delete("DELETE FROM \"node\" WHERE \"id\"=#{id}")
+    int deleteNodeNyId(int id);
+
+    @Select("SELECT MAX(\"id\") FROM \"node\"")
+    String getMaxId();
+
+    @Select("SELECT * FROM \"node\" WHERE \"id\"=#{id}")
+    Node findNodeNyId(int id);
 
 }

@@ -12,6 +12,15 @@ public class NodeService {
     @Autowired
     private NodeMapper nodeMapper;
     public int addNode(Node node){
+        String maxId = nodeMapper.getMaxId();
+        int id;
+        if (maxId==null){
+            id = -1;
+        }
+        else {
+            id = Integer.parseInt(maxId);
+        }
+        node.setId(id+1);
         return nodeMapper.addNode(node);
     }
 
@@ -29,6 +38,14 @@ public class NodeService {
 
     public int updateCPTByNameAndType(String name, int type, String cpt){
         return nodeMapper.updateCPTByNameAndType(name, type, cpt);
+    }
+
+    public int deleteNodeNyId(int id){
+        return nodeMapper.deleteNodeNyId(id);
+    }
+
+    public Node findNodeNyId(int id){
+        return nodeMapper.findNodeNyId(id);
     }
 
 }
