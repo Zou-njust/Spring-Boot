@@ -119,7 +119,7 @@ public class ThreatAnalysis {
     public Map<String, float[]> analyze(Map<String, Object> data, List<Float> intention){
         Map<String, float[]> result = new HashMap<>();
 
-        byte pingtai, wuqi, shuxing, shikong, zonghe, dengji,
+        byte pingtai, wuqi, shuxing, shikong, zonghe, dengji;
 
         String[] resultNames;
         if (type == RECONNAISSANCE){
