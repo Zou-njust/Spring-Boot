@@ -16,6 +16,7 @@ public class MembershipController {
     @Autowired
     NodeService nodeService;
 
+
     @PostMapping("/setMembership")
     public void setMembership(@RequestParam("type") int type, @RequestParam("name") String name, @RequestBody Membership membership){
         int id = nodeService.findIdByNameAndType(name, type);
