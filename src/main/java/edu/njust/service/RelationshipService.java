@@ -31,4 +31,8 @@ public class RelationshipService {
     public List<Relationship> findRelationshipsById(int id){
         return relationshipMapper.findRelationshipsById(id);
     }
+
+    public int countParentById(int id){
+        return relationshipMapper.countParentById(id);
+    }
 }

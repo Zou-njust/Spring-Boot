@@ -27,4 +27,7 @@ public interface RelationshipMapper {
     @Select("SELECT *  FROM \"relationship\" WHERE \"from\"=#{id} OR \"to\"=#{id}")
     List<Relationship> findRelationshipsById(int id);
 
+    @Select("SELECT COUNT(\"from\") FROM \"relationship\" WHERE \"to\"=#{id}")
+    int countParentById(int id);
+
 }

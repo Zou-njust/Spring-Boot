@@ -33,4 +33,7 @@ public interface NodeMapper {
     @Select("SELECT * FROM \"node\" WHERE \"id\"=#{id}")
     Node findNodeNyId(int id);
 
+    @Update("UPDATE \"node\" SET \"cpt\"=#{cpt} WHERE \"id\"=#{id}")
+    int changeCPTById(int id, String cpt);
+
 }
