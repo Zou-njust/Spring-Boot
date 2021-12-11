@@ -718,7 +718,11 @@ public class Neo4jUtil {
 
 
     public String getFilterPropertiesJson(String jsonStr) {
-        String propertiesString = jsonStr.replaceAll("\"(\\w+)\"(\\s*:\\s*)", "$1$2"); // 去掉key的引号
+        String propertiesString = jsonStr.replaceAll("\"(\\w+)\"(\\s*:\\s*)", "`$1`$2"); // 去掉key的引号
+        //System.out.println("change1" + propertiesString);
+        //转换汉字属性
+        propertiesString = propertiesString.replaceAll("\"([\\u4E00-\\u9FA5]+)\"(:)", "`$1`$2");
+        //System.out.println("change2" + propertiesString);
         return propertiesString;
     }
 

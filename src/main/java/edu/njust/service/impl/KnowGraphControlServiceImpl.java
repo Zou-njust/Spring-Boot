@@ -179,8 +179,10 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
     @Override
     public List<NodeVO> queryNodeByLabel(String label) {
         List<NodeVO> nodes = graphQueryUtils.findGraphNode(String.format(GraphQueryUtils.NODE_LABLE, label));
-        System.out.println("nodes" + nodes);
+        //System.out.println("nodes" + nodes);
+        int i = 0;
         for (NodeVO node : nodes) {
+            System.out.println("node" + i++);
             Map<String, Object> properties = node.getProperties();
             node.setProperties(properties);
         }
@@ -224,6 +226,7 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
 
     @Override
     public RelationVO creteRel(String domain,String source, String target, String name){
+        System.out.println( domain+ source + " "+ target + " " +name);
         HashMap<String, Object> map = ikGraphRepository.createlink(domain, Integer.parseInt(source), Integer.parseInt(target),name);
         RelationVO relationVO = new RelationVO();
         relationVO.setId((long) Integer.parseInt((String) map.get("uuid")));
@@ -240,7 +243,11 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
             List<HashMap<String, Object>> graphNodeList = new ArrayList<HashMap<String, Object>>();
             //System.out.println('1' + JSON.toJSONString(property));
             String propertiesString = neo4jUtil.getFilterPropertiesJson(JSON.toJSONString(property));
-            //System.out.println('1' + propertiesString);
+
+            //propertiesString = neo4jUtil.getFilterPropertiesJson(JSON.toJSONString(propertiesString));
+            //System.out.println('2' + propertiesString);
+            //for(int i = 0; i < propertiesString.length();i++)
+            //    System.out.println(propertiesString.charAt(i));
             String cypherSql = String.format("create (n:`%s`:`%s` %s) return n",
                     domain,type, propertiesString);
             graphNodeList = neo4jUtil.GetGraphNode(cypherSql);
@@ -262,9 +269,13 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
         List<NodeVO> nodes;
         if(propertyInput.isEmpty())
             nodes = graphQueryUtils.findGraphNode(String.format(GraphQueryUtils.NODE_PROPERTY_DOMAIN_NOVALUE, domain, label, property));
-        else
-            nodes = graphQueryUtils.findGraphNode(String.format(GraphQueryUtils.NODE_PROPERTY_DOMAIN, domain, label, property, propertyInput));
+        else{
+            if(propertyInput.matches("[0-9]+?"))
+                nodes = graphQueryUtils.findGraphNode(String.format(GraphQueryUtils.NODE_PROPERTY_DOMAIN_NUM, domain, label, property, propertyInput));
+            else
+                nodes = graphQueryUtils.findGraphNode(String.format(GraphQueryUtils.NODE_PROPERTY_DOMAIN, domain, label, property, propertyInput));
 
+        }
         return nodes;
     }
     @Override

@@ -1,5 +1,6 @@
 package edu.njust.util;
 
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import edu.njust.vo.GraphVO;
 import edu.njust.vo.NodeVO;
 import edu.njust.vo.RelationVO;
@@ -91,12 +92,71 @@ public class GraphQueryUtils {
      */
     public static final String CREATE_NODE= "  return *";
 
+    /**
+     * 事理图谱地点
+     */
+//    public static final String DISTANCE_BY_NAEM= "MATCH (n:事理图谱:地点) RETURN n.name,n.latitude,n.longitude";
+    public static final String DISTANCE_BY_NAEM= "MATCH (n:事理图谱:地点) RETURN n";
+
+    public static final String FIND_EVENT= "MATCH w=(n:事理图谱:事件)-[b:`发生`]->(c:事理图谱:地点) WHERE c.name='%s' RETURN n";
+
+
+    public static final String FIND_NEXT_EVENT= "MATCH p=(n:事理图谱:事件)-[r:`顺承`]->(m:事理图谱:事件),w=(n:事理图谱:事件)-[b:`发生`]->(c:事理图谱:地点) WHERE id(n)=%d and " +
+            "c.name='%s' RETURN m";
+
+    public static final String FIND_P= "MATCH p=(n:事理图谱:事件)-[r:`顺承`]->(m:事理图谱:事件) WHERE id(n)=%d and id(m)=%d RETURN r.p";
+
+    public static final String FIND_PLACE="MATCH p=(n:事理图谱:事件)-[b:`发生`]->(c:事理图谱:地点) WHERE id(n)=%d RETURN c";
+
+
     private Driver driver;
 
     public GraphQueryUtils(Driver driver) {
         this.driver = driver;
     }
 
+    public List<NodeVO> findEvent(String place_name){
+        String cypher = String.format(FIND_EVENT, place_name);
+        return findGraphNode(cypher);
+    }
+
+    /**
+     * 查询意图节点
+     *
+     * @param event 事件id
+     * @param place_name 地点名字
+     * @return 节点VO
+     */
+    public List<NodeVO> findIntention(Integer event,String place_name){
+        String cypher = String.format(FIND_NEXT_EVENT, event,place_name);
+        return findGraphNode(cypher);
+    }
+
+    /**
+     * 查询迁移概率
+     *
+     * @param event 事件id
+     * @param next_event 事件id
+     * @return 迁移概率
+     */
+    public double findP(Integer event,Integer next_event){
+        String cypher = String.format(FIND_P, event,next_event);
+        StatementResult result = runCypher(cypher);
+        double p=0;
+        if (result.hasNext()) {
+            Record record = result.next();
+            for (Value value : record.values()) {
+                p = Double.parseDouble(value.asString());
+            }
+        }
+//        System.out.println(result.next()+"!!!");
+//        double p=Double.parseDouble(result.next().get("r.key").toString());
+        return p;
+    }
+    public List<NodeVO> findEventPlace(Integer id){
+        String cypher = String.format(FIND_PLACE, id);
+        return findGraphNode(cypher);
+    }
     /**
      * 查询节点
      *
@@ -126,6 +186,17 @@ public class GraphQueryUtils {
             return false;
         }
     }
+    /**
+     * 查询节点
+     *
+     * @param label    Label
+     * @param property 属性
+     * @return 节点VO
+     */
+    public NodeVO findSinglePlace(String label, String property, String value) {
+        String cypher = String.format(NODE_PROPERTY, label,property,value);
+        return findFirstNode(cypher);
+    }
 
     /**
      * 查询节点
@@ -152,6 +223,17 @@ public class GraphQueryUtils {
         }
         return labels;
     }
+    /**
+     * 查询事理图谱关键地点的经纬度
+     *
+     * @return distance
+     */
+    public List<NodeVO> findPlace() {
+        List<NodeVO> nodes = findGraphNode(DISTANCE_BY_NAEM);
+//        System.out.println(nodes);
+        return nodes;
+    }
+
     /**
      * 查询domain图谱中的所有Label
      *
@@ -330,6 +412,8 @@ public class GraphQueryUtils {
         sb.append("}) RETURN id(node)");
         return sb.toString();
     }
+
+
 
     /**
      * 执行cypher语句
