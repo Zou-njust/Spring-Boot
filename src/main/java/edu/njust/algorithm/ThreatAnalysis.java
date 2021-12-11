@@ -3,6 +3,8 @@ package edu.njust.algorithm;
 import edu.njust.model.oracle.Relationship;
 import edu.njust.service.NodeService;
 import edu.njust.service.RelationshipService;
+import edu.njust.udp.UdpResultData;
+import edu.njust.udp.UdpSender;
 import norsys.netica.*;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -119,6 +121,8 @@ public class ThreatAnalysis {
     public Map<String, float[]> analyze(Map<String, Object> data, List<Float> intention){
         Map<String, float[]> result = new HashMap<>();
 
+        byte pingtai, wuqi, shuxing, shikong, zonghe, dengji;
+
         String[] resultNames;
         if (type == RECONNAISSANCE){
             resultNames = new String[]{"WuLiTeXing", "DianCiPingTai", "MuBiaoShuXing", "FeiXingHangXian"};
@@ -186,6 +190,35 @@ public class ThreatAnalysis {
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        pingtai = (byte)result.get("WuLiTeXing")[0];
+        if (type == RECONNAISSANCE){
+            wuqi = (byte)result.get("DianCiPingTai")[0];
+        }
+        else {
+            wuqi = (byte)result.get("WuQiPingTai")[0];
+        }
+        shuxing = (byte)result.get("MuBiaoShuXing")[0];
+        shikong = (byte)result.get("FeiXingHangXian")[0];
+        zonghe = (byte)((pingtai + wuqi + shuxing + shikong) / 4);
+        dengji = argmax(result.get("WeiXieDengJi"));
+
+        UdpResultData udp = new UdpResultData();
+        udp.createHead(164, (short)18000, (short)18001, (byte)1, new Date().getTime());
+        udp.createThreatAssessBody(
+                "0",
+                "0",
+                (byte) type,
+                pingtai,
+                wuqi,
+                shuxing,
+                shikong,
+                zonghe,
+                dengji
+        );
+        udp.createTail();
+        UdpSender sender = new UdpSender();
+        sender.send(udp.assembleByte());
 
         data.put("planeType", "U-2");
         data.put("area", "关岛");
@@ -366,6 +399,44 @@ public class ThreatAnalysis {
         return true;
     }
 
+    public boolean setCPT(int id, double[] cpt){
+        for (int i = 0; i < netNum - 1; i ++){
+            edu.njust.model.oracle.Node node = nodeService.findNodeNyId(id);
+
+            if(node == null) continue;
+
+            String[] cptStr = node.getCpt().split(",");
+            if(cpt.length != cptStr.length) return false;
+
+            int stateNum = node.getState().split(",").length;
+            int parentStateNum = cptStr.length / stateNum;
+
+            for (int j = 0; j < parentStateNum; j ++){
+                double sum = 0;
+                for (int k = 0; k < stateNum; k ++){
+                    sum += cpt[j * stateNum + k];
+                }
+                if (sum != 1){
+                    for (int k = 0; k < stateNum; k ++){
+                        cpt[j * stateNum + k] /= sum;
+                    }
+                }
+            }
+
+            StringBuilder cptString = new StringBuilder();
+            for (int c = 0; c < cpt.length; c ++){
+                cptString.append(cpt[c]);
+                if (c < cpt.length - 1){
+                    cptString.append(',');
+                }
+            }
+            nodeService.changeCPTById(id, cptString.toString());
+            return true;
+
+        }
+        return false;
+    }
+
     public boolean hasCircle(int id){
         List<Relationship> graph = relationshipService.findAllRelationship();
         Queue<List<Integer>> queue = new LinkedList<>();
@@ -387,5 +458,17 @@ public class ThreatAnalysis {
             }
         }
         return false;
+    }
+
+    private byte argmax(float[] data){
+        byte index = 0;
+        float maxFloat = data[0];
+        for (byte i = 1; i < data.length; i ++){
+            if (maxFloat != Float.max(maxFloat, data[i])){
+                maxFloat = Float.max(maxFloat, data[i]);
+                index = i;
+            }
+        }
+        return index;
     }
 }
