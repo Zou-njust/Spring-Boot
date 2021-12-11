@@ -48,4 +48,8 @@ public class NodeService {
         return nodeMapper.findNodeNyId(id);
     }
 
+    public int changeCPTById(int id, String cpt){
+        return nodeMapper.changeCPTById(id, cpt);
+    }
+
 }
