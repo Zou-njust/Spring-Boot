@@ -30,4 +30,22 @@ public class UdpSender {
             e.printStackTrace();
         }
     }
+
+    // 发送byte[]
+    public void send(byte[] buf) {
+        try {
+            // 1，创建udp服务。通过DatagramSocket对象。
+            DatagramSocket socket = new DatagramSocket(LOCAL_PORT);
+            // 2，确定数据，并封装成数据包。DatagramPacket(byte[] buf, int length, InetAddress, int port)
+            DatagramPacket dp = new DatagramPacket(
+                    buf, buf.length, InetAddress.getByName(SERVER_HOSTNAME), SERVER_PORT
+            );
+            // 3，通过socket服务，将已有的数据包发送出去。通过send方法。
+            socket.send(dp);
+            // 4，关闭资源。
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
