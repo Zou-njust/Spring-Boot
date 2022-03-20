@@ -41,6 +41,8 @@ public class GraphQueryUtils {
      * 查询某个图谱Node类型
      */
     public static final String CALL_DOMAIN_LABEL = "MATCH (n:`%s`) RETURN labels(n)";
+
+    public static final String CALL_DOMAIN_REL_LABEL = "MATCH (n:`%s`)-[r]->(m:`%s`) RETURN distinct type(r)";
     /**
      * 查询某个图谱Node的property类型
      */
@@ -53,6 +55,8 @@ public class GraphQueryUtils {
             "WITH nodeLabels,propertyName WHERE \"%s\" in nodeLabels\n" +
             "RETURN propertyName";
     public static final String NODE_PROPERTY = "MATCH (n:`%s`) WHERE n.%s RETURN n;";
+    public static final String NODE_KEYWORD1 = "MATCH (n:`%s`:`%s`) RETURN n;";
+    public static final String NODE_KEYWORD2 = "MATCH (n:`%s`) WHERE n.name contains '%s' RETURN n;";
     public static final String NODE_PROPERTY_DOMAIN = "MATCH (n:`%s`:`%s`) WHERE n.`%s` = '%s' RETURN n;";
     public static final String NODE_PROPERTY_DOMAIN_NUM = "MATCH (n:`%s`:`%s`) WHERE n.`%s` = %s RETURN n;";
     public static final String NODE_PROPERTY_DOMAIN_NOVALUE = "MATCH (n:`%s`:`%s`) WHERE EXISTS(n.`%s`) RETURN n;";
@@ -242,6 +246,20 @@ public class GraphQueryUtils {
             labels.add(record.values().get(0).get(1).toString().replace("\"", ""));
         }
         System.out.println(labels);
+        return labels;
+    }
+    /**
+     * 查询domain图谱中所有关系的Label
+     *
+     * @return label
+     */
+    public Set<String> findDomainRelLabel(String domain) {
+        Set<String> labels = new HashSet<>();
+        StatementResult result = runCypher(String.format(CALL_DOMAIN_REL_LABEL, domain,domain));
+        while (result.hasNext()) {
+            Record record = result.next();
+            labels.addAll(record.values().stream().map(Value::asString).collect(Collectors.toSet()));
+        }
         return labels;
     }
     /**

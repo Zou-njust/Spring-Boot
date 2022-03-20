@@ -261,6 +261,10 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
         return graphQueryUtils.findDomainLabel(domain);
     }
     @Override
+    public Set<String> getRelLabel(String domain){
+        return graphQueryUtils.findDomainRelLabel(domain);
+    }
+    @Override
     public Set<String> getLabelProperty(String domain, String label){
         return graphQueryUtils.findDomainLabelProperty(domain, label);
     }
@@ -283,5 +287,15 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
         GraphVO graph = graphQueryUtils.searchByRel(domain,relName);
         //System.out.println("关系" + graph);
         return graph;
+    }
+    @Override
+    public List<NodeVO> searchByKeyword(String domain, String keyword){
+        List<NodeVO> nodes;
+        if(graphQueryUtils.findDomainLabel(domain).contains(keyword))
+            nodes = graphQueryUtils.findGraphNode(String.format(GraphQueryUtils.NODE_KEYWORD1, domain, keyword));
+        else{
+            nodes= graphQueryUtils.findGraphNode(String.format(GraphQueryUtils.NODE_KEYWORD2, domain, keyword));
+        }
+        return nodes;
     }
 }

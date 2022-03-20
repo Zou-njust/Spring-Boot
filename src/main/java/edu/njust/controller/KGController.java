@@ -41,9 +41,17 @@ public class KGController {
                                                     @RequestParam(value = "value") String value) {
         return CommonResult.success(service.findNodeByName(label, property, value));
     }
+    @GetMapping("searchByKeyword")
+    public CommonResult<List<NodeVO>> searchByKeyword(@RequestParam(value = "domain") String domain,@RequestParam(value = "keyword") String keyword) {
+        return CommonResult.success(service.searchByKeyword(domain,keyword));
+    }
     @GetMapping("getLabel")
     public CommonResult<Set<String>> getLabel(@RequestParam(value = "domain") String domain) {
         return CommonResult.success(service.getLabel(domain));
+    }
+    @GetMapping("getRelLabel")
+    public CommonResult<Set<String>> getRelLabel(@RequestParam(value = "domain") String domain) {
+        return CommonResult.success(service.getRelLabel(domain));
     }
     @GetMapping("getLabelProperty")
     public CommonResult<Set<String>> getLabelProperty(@RequestParam(value = "domain") String domain, @RequestParam(value = "label") String label){

@@ -200,6 +200,13 @@ public interface IKnowGraphControlService {
      */
     Set<String> getLabel(String domain);
     /**
+     * 获取图谱关系标签
+     *
+     * @param domain 节点领域
+     * @return 图谱所有关系标签类型
+     */
+    Set<String> getRelLabel(String domain);
+    /**
      * 获取标签属性名
      * @param domain 节点领域
      * @param label 节点标签
@@ -215,4 +222,11 @@ public interface IKnowGraphControlService {
      * @return 查询到的节点
      */
     List<NodeVO> searchByProperty(String domain, String label, String property,String propertyInput);
+    /**
+     * 根据标签属性名搜索
+     * @param domain 节点领域
+     * @param keyword 关键词
+     * @return 查询到的节点
+     */
+    List<NodeVO> searchByKeyword(String domain, String keyword);
 }
