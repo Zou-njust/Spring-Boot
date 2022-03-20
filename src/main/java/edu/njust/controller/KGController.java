@@ -113,4 +113,12 @@ public class KGController {
     public CommonResult<Boolean> deleteRelById(@RequestParam(value = "id") Integer id) {
         return CommonResult.success(service.deleteRel(id));
     }
+    @PostMapping("editNode")
+    public CommonResult<NodeVO> editNode(@RequestParam(value = "id") Integer id, @RequestBody String property) {
+        System.out.println(property);
+        Map<String,Object> maps = (Map) JSON.parse(property);
+        Integer nodeid =  service.editNode(id, maps);
+        NodeVO nodeVO = service.queryNode(nodeid);
+        return CommonResult.success(nodeVO);
+    }
 }

@@ -298,4 +298,11 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
         }
         return nodes;
     }
+    @Override
+    public Integer editNode(Integer nodeId, Map<String,Object> property){
+        for (Map.Entry<String, Object> item : property.entrySet()) {
+            graphQueryUtils.runCypher(String.format(GraphQueryUtils.EDIT_NODE,nodeId, item.getKey(), item.getValue()));
+        }
+        return nodeId;
+    }
 }

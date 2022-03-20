@@ -107,6 +107,8 @@ public class GraphQueryUtils {
 
     public static final String FIND_PLACE="MATCH p=(n:事理图谱:事件)-[b:`发生`]->(c:事理图谱:地点) WHERE id(n)=%d RETURN c";
 
+    public static final String EDIT_NODE="MATCH (r) WHERE id(r) =%d SET r.`%s`= '%s' return r";
+
     private Driver driver;
 
     public GraphQueryUtils(Driver driver) {

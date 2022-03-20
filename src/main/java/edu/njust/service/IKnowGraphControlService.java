@@ -229,4 +229,6 @@ public interface IKnowGraphControlService {
      * @return 查询到的节点
      */
     List<NodeVO> searchByKeyword(String domain, String keyword);
+    //修改节点属性
+    Integer editNode(Integer nodeId, Map<String,Object> property);
 }
