@@ -84,18 +84,14 @@ public class KGController {
         //System.out.println("关系：" + link);
         return CommonResult.success(new DataGraph<>(node, link));
     }
-    @GetMapping("createNode")
-    public CommonResult<NodeVO> createNode(@RequestParam(value = "domain") String domain,@RequestParam(value = "name")String name,
-                           @RequestParam(value = "type")String type,
-                           @RequestParam(value = "property") String property
-    ) {
+    @PostMapping("createNode")
+    public CommonResult<NodeVO> createNode(@RequestParam(value = "domain") String domain,@RequestParam(value = "name")String name, @RequestParam(value = "type")String type, @RequestBody String property) {
         System.out.println(domain+ "    " + name + "    " + property);
         Map<String,Object> maps = (Map) JSON.parse(property);
         maps.put("name",name);
         Integer newId =  service.createNode(domain,type, maps);
         NodeVO nodeVO = service.queryNode(newId);
         return CommonResult.success(nodeVO);
-
     }
     @GetMapping("createRel")
     public CommonResult<RelationVO> createRel(@RequestParam(value = "source") String source,
@@ -115,7 +111,6 @@ public class KGController {
     }
     @PostMapping("editNode")
     public CommonResult<NodeVO> editNode(@RequestParam(value = "id") Integer id, @RequestBody String property) {
-        System.out.println(property);
         Map<String,Object> maps = (Map) JSON.parse(property);
         Integer nodeid =  service.editNode(id, maps);
         NodeVO nodeVO = service.queryNode(nodeid);

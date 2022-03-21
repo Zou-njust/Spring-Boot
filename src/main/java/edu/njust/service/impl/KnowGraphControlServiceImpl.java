@@ -14,6 +14,9 @@ import edu.njust.util.StringUtil;
 import edu.njust.vo.GraphVO;
 import edu.njust.vo.NodeVO;
 import edu.njust.vo.RelationVO;
+import org.neo4j.driver.v1.Record;
+import org.neo4j.driver.v1.StatementResult;
+import org.neo4j.driver.v1.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -236,25 +239,35 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
         relationVO.setTargetId((long) Integer.parseInt((String) map.get("targetId")));
         return relationVO;
     }
+//    @Override
+//    public Integer createNode(String domain, String type,Map<String,Object> property){
+//        //graphQueryUtils.createNodeByMap(GraphQueryUtils.CREATE_NODE, properties);
+//        try{
+//            List<HashMap<String, Object>> graphNodeList = new ArrayList<HashMap<String, Object>>();
+//            //System.out.println('1' + JSON.toJSONString(property));
+//            String propertiesString = neo4jUtil.getFilterPropertiesJson(JSON.toJSONString(property));
+//
+//            //propertiesString = neo4jUtil.getFilterPropertiesJson(JSON.toJSONString(propertiesString));
+//            //System.out.println('2' + propertiesString);
+//            //for(int i = 0; i < propertiesString.length();i++)
+//            //    System.out.println(propertiesString.charAt(i));
+//            String cypherSql = String.format("create (n:`%s`:`%s` %s) return n",
+//                    domain,type, propertiesString);
+//            graphNodeList = neo4jUtil.GetGraphNode(cypherSql);
+//            return Integer.parseInt((String) graphNodeList.get(0).get("uuid"));
+//        }catch (Exception e){
+//            throw e;
+//        }
+//    }
     @Override
     public Integer createNode(String domain, String type,Map<String,Object> property){
-        //graphQueryUtils.createNodeByMap(GraphQueryUtils.CREATE_NODE, properties);
-        try{
-            List<HashMap<String, Object>> graphNodeList = new ArrayList<HashMap<String, Object>>();
-            //System.out.println('1' + JSON.toJSONString(property));
-            String propertiesString = neo4jUtil.getFilterPropertiesJson(JSON.toJSONString(property));
-
-            //propertiesString = neo4jUtil.getFilterPropertiesJson(JSON.toJSONString(propertiesString));
-            //System.out.println('2' + propertiesString);
-            //for(int i = 0; i < propertiesString.length();i++)
-            //    System.out.println(propertiesString.charAt(i));
-            String cypherSql = String.format("create (n:`%s`:`%s` %s) return n",
-                    domain,type, propertiesString);
-            graphNodeList = neo4jUtil.GetGraphNode(cypherSql);
-            return Integer.parseInt((String) graphNodeList.get(0).get("uuid"));
-        }catch (Exception e){
-            throw e;
+        String cypherSql = String.format("create (n:`%s`:`%s`) return n", domain,type);
+        List<HashMap<String, Object>> graphNodeList = neo4jUtil.GetGraphNode(cypherSql);
+        Integer nodeId=Integer.parseInt((String) graphNodeList.get(0).get("uuid"));
+        for (Map.Entry<String, Object> item : property.entrySet()) {
+            graphQueryUtils.runCypher(String.format(GraphQueryUtils.EDIT_NODE,nodeId, item.getKey(), item.getValue()));
         }
+        return nodeId;
     }
     @Override
     public Set<String> getLabel(String domain){
