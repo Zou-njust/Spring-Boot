@@ -132,9 +132,7 @@ public interface IKGraphRepository {
 
 	/**
 	 * 添加关系
-	 * 
-	 * @param domain
-	 *            领域
+	 *
 	 * @param sourceid
 	 *            源节点id
 	 * @param targetid
@@ -143,7 +141,7 @@ public interface IKGraphRepository {
 	 *            关系
 	 * @return
 	 */
-	HashMap<String, Object> createlink(String domain, long sourceid, long targetid, String ship);
+	HashMap<String, Object> createlink(long sourceid, long targetid, String ship);
 
 	/**
 	 * 更新关系

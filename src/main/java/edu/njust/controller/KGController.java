@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.relation.Relation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,5 +116,11 @@ public class KGController {
         Integer nodeid =  service.editNode(id, maps);
         NodeVO nodeVO = service.queryNode(nodeid);
         return CommonResult.success(nodeVO);
+    }
+    @GetMapping("editRel")
+    public CommonResult<Boolean> editRel(@RequestParam(value = "source") String source, @RequestParam(value = "target") String target, @RequestParam(value = "id") Integer id, @RequestParam(value = "name")String name) {
+
+        service.editRel(Integer.parseInt(source),Integer.parseInt(target),id, name);
+        return CommonResult.success(true);
     }
 }

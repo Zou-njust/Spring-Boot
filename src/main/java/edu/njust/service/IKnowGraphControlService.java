@@ -231,4 +231,6 @@ public interface IKnowGraphControlService {
     List<NodeVO> searchByKeyword(String domain, String keyword);
     //修改节点属性
     Integer editNode(Integer nodeId, Map<String,Object> property);
+    //修改关系name
+    void editRel(Integer source,Integer target,Integer relId, String name);
 }

@@ -230,7 +230,7 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
     @Override
     public RelationVO creteRel(String domain,String source, String target, String name){
         System.out.println( domain+ source + " "+ target + " " +name);
-        HashMap<String, Object> map = ikGraphRepository.createlink(domain, Integer.parseInt(source), Integer.parseInt(target),name);
+        HashMap<String, Object> map = ikGraphRepository.createlink(Integer.parseInt(source), Integer.parseInt(target),name);
         RelationVO relationVO = new RelationVO();
         relationVO.setId((long) Integer.parseInt((String) map.get("uuid")));
         relationVO.setName((String) map.get("name"));
@@ -317,5 +317,10 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
             graphQueryUtils.runCypher(String.format(GraphQueryUtils.EDIT_NODE,nodeId, item.getKey(), item.getValue()));
         }
         return nodeId;
+    }
+    @Override
+    public void editRel(Integer source,Integer target,Integer relId, String name){
+        graphQueryUtils.deleteRel(relId);
+        ikGraphRepository.createlink(source, target,name);
     }
 }

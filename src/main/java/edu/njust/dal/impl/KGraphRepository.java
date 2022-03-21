@@ -444,8 +444,7 @@ public class KGraphRepository implements IKGraphRepository {
 	/**
 	 * 添加关系
 	 * 
-	 * @param domain
-	 *            领域
+
 	 * @param sourceid
 	 *            源节点id
 	 * @param targetid
@@ -454,11 +453,11 @@ public class KGraphRepository implements IKGraphRepository {
 	 *            关系
 	 * @return
 	 */
-	public HashMap<String, Object> createlink(String domain, long sourceid, long targetid, String ship) {
+	public HashMap<String, Object> createlink(long sourceid, long targetid, String ship) {
 		HashMap<String, Object> rss = new HashMap<String, Object>();
 		try {
-			String cypherSql = String.format("MATCH (n:`%s`),(m:`%s`) WHERE id(n)=%s AND id(m) = %s "
-					+ "CREATE (n)-[r:`%s`{name:'%s'}]->(m)" + "RETURN r", domain, domain, sourceid, targetid, ship, ship);
+			String cypherSql = String.format("MATCH (n),(m) WHERE id(n)=%s AND id(m) = %s "
+					+ "CREATE (n)-[r:`%s`{name:'%s'}]->(m)" + "RETURN r",  sourceid, targetid, ship, ship);
 			System.out.println(cypherSql);
 			List<HashMap<String, Object>> cypherResult = neo4jUtil.GetGraphRelationShip(cypherSql);
 			if (cypherResult.size() > 0) {
