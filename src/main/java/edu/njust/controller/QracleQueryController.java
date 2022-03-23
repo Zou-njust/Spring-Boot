@@ -89,7 +89,7 @@ public class QracleQueryController {
     {
         boolean isMapping =false;
         String RelationName = submitInfo.getRelationName();
-        String StartType =submitInfo.getType();
+        String StartType =submitInfo.getStartType();
         String EndType = submitInfo.getEndType();
         String StartTableName = submitInfo.getStartTableName();
         String EndingTableName = submitInfo.getEndingTableName();

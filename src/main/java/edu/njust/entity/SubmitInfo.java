@@ -23,11 +23,11 @@ public class SubmitInfo implements Serializable {
         RelationName = relationName;
     }
 
-    public String getType() {
+    public String getStartType() {
         return StartType;
     }
 
-    public void setType(String startType) {
+    public void setStartType(String startType) {
         StartType = startType;
     }
 
