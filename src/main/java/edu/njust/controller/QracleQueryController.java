@@ -115,7 +115,7 @@ public class QracleQueryController {
         }
         if (isMapping)
         return CommonResult.success("映射成功！");
-        else  return CommonResult.success("映射失败，映射表选取错误，请重新选择！");
+        else  return CommonResult.failed("映射失败，映射表选取错误，请重新选择！");
     }
 
 }
