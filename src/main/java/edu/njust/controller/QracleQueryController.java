@@ -24,36 +24,36 @@ public class QracleQueryController {
     public List<String> getTableName()throws Exception
     {
         List<String> list = dbQueryService.TableNameQuery();
-        for (String str : list) {
-            System.out.println(str);
-        }
+//        for (String str : list) {
+//            System.out.println(str);
+//        }
         return list;
 
     }
 
-    @PostMapping(value = "/ColumnQuery")
+    @GetMapping(value = "/ColumnQuery")
     public List<String> getColumnName(@RequestParam(value="TableName") String TableName)throws Exception
     {
         List<String> list = dbQueryService.ColumnQuery(TableName);
-        for (String str : list) {
-            System.out.println(str);
-        }
+//        for (String str : list) {
+//            System.out.println(str);
+//        }
         return list;
     }
 
-    @PostMapping(value = "/getID")
+    @GetMapping(value = "/getID")
     public List<String> getId(@RequestParam(value="TableName") String TableName)throws Exception
     {
         List<String> list = dbQueryService.getIdValue(TableName);
 //        List<String> list = dbQueryService.getAllValue(TableName);
-        for (String str : list) {
-            System.out.println(str);
-        }
+//        for (String str : list) {
+//            System.out.println(str);
+//        }
         return list;
     }
 
 
-    @PostMapping(value = "/getMapping")
+    @GetMapping(value = "/getMapping")
     public HashMap<Integer,MappingValue> getMapping(@RequestParam(value="TableName") String TableName,
                                    @RequestParam(value="ColumnName1") String ColumnName1,
                                    @RequestParam(value="ColumnName2") String ColumnName2
@@ -102,8 +102,8 @@ public class QracleQueryController {
         for (Integer in:integers){
             String StartID = map.get(in).getStartValue();
             String EndID = map.get(in).getEndingValue();
-            System.out.println(StartID);
-            System.out.println(EndID);
+//            System.out.println(StartID);
+//            System.out.println(EndID);
             if (list1.contains(map.get(in).getStartValue())&&list2.contains(map.get(in).getEndingValue()))
             {
                 System.out.println("匹配成功");
