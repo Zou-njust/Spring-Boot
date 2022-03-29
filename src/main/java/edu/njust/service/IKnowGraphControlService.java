@@ -233,4 +233,11 @@ public interface IKnowGraphControlService {
     Integer editNode(Integer nodeId, Map<String,Object> property);
     //修改关系name
     void editRel(Integer source,Integer target,Integer relId, String name);
+    /**
+     * 根据节点编号查询当前节点的关系
+     *
+     * @param data 节点集
+     * @return 关系集和节点集
+     */
+    GraphVO oneHipONGQuery(List<NodeVO> data);
 }

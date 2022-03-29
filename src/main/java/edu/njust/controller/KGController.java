@@ -42,9 +42,11 @@ public class KGController {
                                                     @RequestParam(value = "value") String value) {
         return CommonResult.success(service.findNodeByName(label, property, value));
     }
+
+    //返回查询结果一跳关系结果
     @GetMapping("searchByKeyword")
-    public CommonResult<List<NodeVO>> searchByKeyword(@RequestParam(value = "domain") String domain,@RequestParam(value = "keyword") String keyword) {
-        return CommonResult.success(service.searchByKeyword(domain,keyword));
+    public CommonResult<GraphVO> searchByKeyword(@RequestParam(value = "domain") String domain,@RequestParam(value = "keyword") String keyword) {
+        return CommonResult.success(service.oneHipONGQuery(service.searchByKeyword(domain,keyword)));
     }
     @GetMapping("getLabel")
     public CommonResult<Set<String>> getLabel(@RequestParam(value = "domain") String domain) {
@@ -119,8 +121,11 @@ public class KGController {
     }
     @GetMapping("editRel")
     public CommonResult<Boolean> editRel(@RequestParam(value = "source") String source, @RequestParam(value = "target") String target, @RequestParam(value = "id") Integer id, @RequestParam(value = "name")String name) {
-
         service.editRel(Integer.parseInt(source),Integer.parseInt(target),id, name);
         return CommonResult.success(true);
+    }
+    @GetMapping("getNeighbour")
+    public CommonResult<GraphVO> getNeighbour(@RequestParam(value = "id") long id) {
+        return CommonResult.success(service.queryNeighbour(id, null));
     }
 }

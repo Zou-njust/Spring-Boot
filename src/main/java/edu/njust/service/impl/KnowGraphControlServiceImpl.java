@@ -323,4 +323,24 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
         graphQueryUtils.deleteRel(relId);
         ikGraphRepository.createlink(source, target,name);
     }
+    @Override
+    public GraphVO oneHipONGQuery(List<NodeVO> data){
+
+        GraphVO result = new GraphVO();
+        Set<NodeVO> nodeVOS = new LinkedHashSet<>();
+        Set<RelationVO> relationVOS = new LinkedHashSet<>();
+        for (NodeVO node : data){
+//            nodeVOS.add(node);
+            nodeVOS.addAll(graphQueryUtils.findNeighbour(node.getId()).getNodes());
+            relationVOS.addAll(graphQueryUtils.findNeighbour(node.getId()).getLinks());
+        }
+//        if(nodeVOS.isEmpty()){
+//            result.setNodes(new LinkedList<>(data));
+//            return result;
+//        }else{
+        result.setNodes(new LinkedList<>(nodeVOS));
+        result.setLinks(new LinkedList<>(relationVOS));
+        return result;
+//        }
+    }
 }
