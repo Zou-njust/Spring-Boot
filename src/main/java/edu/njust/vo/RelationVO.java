@@ -1,6 +1,7 @@
 package edu.njust.vo;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 关系显示对象
@@ -98,5 +99,24 @@ public class RelationVO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    //    针对set集合重复问题重写了equals和hashCode方法
+//    id用==不能正确判别，使用下面的方法可以，可能是因为用了Long类而不是基础类型
+    @Override
+    public boolean equals(Object obj){
+        if(!(obj instanceof RelationVO)){
+            return false;
+        }
+        RelationVO n=(RelationVO) obj;
+        if(Objects.equals(this.id, n.id)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode(){
+        return this.id.hashCode();
     }
 }

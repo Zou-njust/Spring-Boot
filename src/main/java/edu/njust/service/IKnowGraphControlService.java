@@ -2,6 +2,7 @@ package edu.njust.service;
 
 import edu.njust.entity.DataMap;
 import edu.njust.entity.QAEntityItem;
+import edu.njust.model.mysql.UserModel;
 import edu.njust.vo.GraphVO;
 import edu.njust.vo.NodeVO;
 import edu.njust.vo.RelationVO;
@@ -34,22 +35,22 @@ public interface IKnowGraphControlService {
      */
     NodeVO queryNode(Integer id);
 
-    /**
-     * 查询Node
-     *
-     * @param label    节点类型
-     * @param property 属性
-     * @param value    值
-     * @return node
-     */
-    List<NodeVO> findNodeByName(String label, String property, String value);
-    /**
-     * 根据名称查询节点
-     *
-     * @param name 名称，后续用于显示节点信息
-     * @return 节点列表
-     */
-    List<NodeVO> queryNode(String name);
+//    /**
+//     * 查询Node
+//     *
+//     * @param label    节点类型
+//     * @param property 属性
+//     * @param value    值
+//     * @return node
+//     */
+//    List<NodeVO> findNodeByName(String label, String property, String value);
+//    /**
+//     * 根据名称查询节点
+//     *
+//     * @param name 名称，后续用于显示节点信息
+//     * @return 节点列表
+//     */
+    NodeVO queryNode(String domain,String name);
 
     /**
      * 根据节点ID 查询周围节点
@@ -182,7 +183,7 @@ public interface IKnowGraphControlService {
      * @param name 关系名称
      * @return 删除结果
      */
-    RelationVO creteRel(String domain,String source, String target, String name);
+    RelationVO createRel(String domain,String source, String target, String name);
     /**
      * 创建单个节点
      *
@@ -231,6 +232,7 @@ public interface IKnowGraphControlService {
     List<NodeVO> searchByKeyword(String domain, String keyword);
     //修改节点属性
     Integer editNode(Integer nodeId, Map<String,Object> property);
+    void deleteProperties(Integer nodeId,List<String> deleteList);
     //修改关系name
     void editRel(Integer source,Integer target,Integer relId, String name);
     /**
@@ -240,4 +242,6 @@ public interface IKnowGraphControlService {
      * @return 关系集和节点集
      */
     GraphVO oneHipONGQuery(List<NodeVO> data);
+    List<String> getTableNames();
+    Boolean importFromMysql(String tableName);
 }

@@ -25,4 +25,8 @@ public class UserModel {
     public void setUserPw(String userpw) {
         this.userpw = userpw;
     }
+    @Override
+    public String toString(){
+        return "userid:"+userid+" username:"+username+" userpw:"+userpw;
+    }
 }

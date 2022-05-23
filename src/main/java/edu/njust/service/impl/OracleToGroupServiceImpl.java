@@ -98,6 +98,6 @@ public class OracleToGroupServiceImpl implements OracleToGroupService {
         String domain = "知识图谱";
         String source =  StartNode.toString();
         String target = EndNode.toString();
-        iKnowGraphControlService.creteRel(domain,source,target,RelationName);
+        iKnowGraphControlService.createRel(domain,source,target,RelationName);
     }
 }

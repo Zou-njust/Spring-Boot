@@ -36,16 +36,21 @@ public class KGController {
         System.out.println("关系：" + link);
         return CommonResult.success(new DataGraph<>(node, link));
     }
+//    @GetMapping("searchNodeByName")
+//    public CommonResult<List<NodeVO>> getProperties(@RequestParam(value = "label") String label,
+//                                                    @RequestParam(value = "property") String property,
+//                                                    @RequestParam(value = "value") String value) {
+//        return CommonResult.success(service.findNodeByName(label, property, value));
+//    }
     @GetMapping("searchNodeByName")
-    public CommonResult<List<NodeVO>> getProperties(@RequestParam(value = "label") String label,
-                                                    @RequestParam(value = "property") String property,
-                                                    @RequestParam(value = "value") String value) {
-        return CommonResult.success(service.findNodeByName(label, property, value));
+    public CommonResult<NodeVO> searchNodeByName(@RequestParam(value = "domain") String domain,@RequestParam(value="name") String name){
+        return CommonResult.success(service.queryNode(domain,name));
     }
 
     //返回查询结果一跳关系结果
     @GetMapping("searchByKeyword")
     public CommonResult<GraphVO> searchByKeyword(@RequestParam(value = "domain") String domain,@RequestParam(value = "keyword") String keyword) {
+//        System.out.println("输出"+CommonResult.success(service.oneHipONGQuery(service.searchByKeyword(domain,keyword))).getData().getNodes().get(0).getName());
         return CommonResult.success(service.oneHipONGQuery(service.searchByKeyword(domain,keyword)));
     }
     @GetMapping("getLabel")
@@ -101,7 +106,7 @@ public class KGController {
                                               @RequestParam(value = "target") String target,
                                               @RequestParam(value = "name") String name,
                                               @RequestParam(value = "domain") String domain){
-        return CommonResult.success(service.creteRel(domain,source,target,name));
+        return CommonResult.success(service.createRel(domain,source,target,name));
     }
     @DeleteMapping("node")
     public CommonResult<Boolean> deleteNodeById(@RequestParam(value = "id") Integer nodeId) {
@@ -111,6 +116,11 @@ public class KGController {
     @DeleteMapping("rel")
     public CommonResult<Boolean> deleteRelById(@RequestParam(value = "id") Integer id) {
         return CommonResult.success(service.deleteRel(id));
+    }
+    @PostMapping("deleteProperties")
+    public void deleteProperties(@RequestParam(value="id") Integer id, @RequestBody String deleteList){
+        List<String> list = (List<String>) JSON.parse(deleteList);
+        service.deleteProperties(id,list);
     }
     @PostMapping("editNode")
     public CommonResult<NodeVO> editNode(@RequestParam(value = "id") Integer id, @RequestBody String property) {
@@ -127,5 +137,13 @@ public class KGController {
     @GetMapping("getNeighbour")
     public CommonResult<GraphVO> getNeighbour(@RequestParam(value = "id") long id) {
         return CommonResult.success(service.queryNeighbour(id, null));
+    }
+    @GetMapping("getTableNames")
+    public CommonResult<List<String>> getTableNames(){
+        return CommonResult.success(service.getTableNames());
+    }
+    @GetMapping("importFromMysql")
+    public CommonResult<Boolean> importFromMysql(@RequestParam(value="tableName") String tableName){
+        return CommonResult.success(service.importFromMysql(tableName));
     }
 }

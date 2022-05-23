@@ -1,12 +1,13 @@
 package edu.njust.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import edu.njust.dal.IFieldMeanRepository;
 import edu.njust.dal.IKGraphRepository;
 import edu.njust.dal.Table2NodelLabelRepository;
 import edu.njust.entity.DataMap;
 import edu.njust.entity.dto.FieldMean;
 import edu.njust.entity.dto.Table2NodeLabel;
+import edu.njust.mapper.mysql.UserMapper;
+import edu.njust.model.mysql.UserModel;
 import edu.njust.service.IKnowGraphControlService;
 import edu.njust.util.GraphQueryUtils;
 import edu.njust.util.Neo4jUtil;
@@ -14,12 +15,11 @@ import edu.njust.util.StringUtil;
 import edu.njust.vo.GraphVO;
 import edu.njust.vo.NodeVO;
 import edu.njust.vo.RelationVO;
-import org.neo4j.driver.v1.Record;
-import org.neo4j.driver.v1.StatementResult;
-import org.neo4j.driver.v1.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+import java.io.File;
 import java.util.*;
 
 /**
@@ -31,7 +31,8 @@ import java.util.*;
  */
 @Service
 public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
-
+    private static final String importURL="D:\\neo4j-community-3.5.28\\import\\mysql\\";
+    private final UserMapper userMapper;
     private GraphQueryUtils graphQueryUtils;
     private IFieldMeanRepository fieldMeanRepository;
     private Table2NodelLabelRepository table2NodelLabelRepository;
@@ -40,10 +41,11 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
     @Autowired
     private Neo4jUtil neo4jUtil;
 
-    public KnowGraphControlServiceImpl(GraphQueryUtils graphQueryUtils, IFieldMeanRepository fieldMeanRepository, Table2NodelLabelRepository table2NodelLabelRepository) {
+    public KnowGraphControlServiceImpl(GraphQueryUtils graphQueryUtils, IFieldMeanRepository fieldMeanRepository, Table2NodelLabelRepository table2NodelLabelRepository,UserMapper userMapper) {
         this.graphQueryUtils = graphQueryUtils;
         this.fieldMeanRepository = fieldMeanRepository;
         this.table2NodelLabelRepository = table2NodelLabelRepository;
+        this.userMapper=userMapper;
     }
 
     @Override
@@ -57,14 +59,14 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
     }
 
     @Override
-    public List<NodeVO> queryNode(String name) {
-        return null;
+    public NodeVO queryNode(String domain,String name) {
+        return graphQueryUtils.findNodeByName(domain,name);
     }
 
-    @Override
-    public List<NodeVO> findNodeByName(String label, String property, String value) {
-        return graphQueryUtils.findNodeByName(label, property,value);
-    }
+//    @Override
+//    public List<NodeVO> findNodeByName(String label, String property, String value) {
+//        return graphQueryUtils.findNodeByName(label, property,value);
+//    }
     @Override
     public GraphVO queryNodeNeighbour(String nodeId,String domain) {
         HashMap<String, Object> graph = ikGraphRepository.getmorerelationnode(domain,nodeId);
@@ -183,12 +185,14 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
     public List<NodeVO> queryNodeByLabel(String label) {
         List<NodeVO> nodes = graphQueryUtils.findGraphNode(String.format(GraphQueryUtils.NODE_LABLE, label));
         //System.out.println("nodes" + nodes);
-        int i = 0;
-        for (NodeVO node : nodes) {
-            System.out.println("node" + i++);
-            Map<String, Object> properties = node.getProperties();
-            node.setProperties(properties);
-        }
+
+//      下面这段代码不知道有什么用
+//        int i = 0;
+//        for (NodeVO node : nodes) {
+//            System.out.println("node" + i++);
+//            Map<String, Object> properties = node.getProperties();
+//            node.setProperties(properties);
+//        }
         return nodes;
     }
     @Override
@@ -227,8 +231,9 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
         return graphQueryUtils.deleteRel(relId);
     }
 
+//    这里createRel打错了
     @Override
-    public RelationVO creteRel(String domain,String source, String target, String name){
+    public RelationVO createRel(String domain,String source, String target, String name){
         System.out.println( domain+ source + " "+ target + " " +name);
         HashMap<String, Object> map = ikGraphRepository.createlink(Integer.parseInt(source), Integer.parseInt(target),name);
         RelationVO relationVO = new RelationVO();
@@ -304,10 +309,11 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
     @Override
     public List<NodeVO> searchByKeyword(String domain, String keyword){
         List<NodeVO> nodes;
-        if(graphQueryUtils.findDomainLabel(domain).contains(keyword))
+        if(graphQueryUtils.findDomainLabel(domain).contains(keyword)) {
             nodes = graphQueryUtils.findGraphNode(String.format(GraphQueryUtils.NODE_KEYWORD1, domain, keyword));
+        }
         else{
-            nodes= graphQueryUtils.findGraphNode(String.format(GraphQueryUtils.NODE_KEYWORD2, domain, keyword));
+            nodes= graphQueryUtils.findGraphNode(String.format(GraphQueryUtils.NODE_KEYWORD2, domain, keyword,keyword));
         }
         return nodes;
     }
@@ -317,6 +323,12 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
             graphQueryUtils.runCypher(String.format(GraphQueryUtils.EDIT_NODE,nodeId, item.getKey(), item.getValue()));
         }
         return nodeId;
+    }
+    @Override
+    public void deleteProperties(Integer nodeId,List<String> deleteList){
+        for(String property : deleteList){
+            graphQueryUtils.runCypher(String.format(GraphQueryUtils.DELETE_PROPERTY,nodeId,property));
+        }
     }
     @Override
     public void editRel(Integer source,Integer target,Integer relId, String name){
@@ -329,8 +341,10 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
         GraphVO result = new GraphVO();
         Set<NodeVO> nodeVOS = new LinkedHashSet<>();
         Set<RelationVO> relationVOS = new LinkedHashSet<>();
+//      按标签搜索时，data是正常的所有该标签节点的list
         for (NodeVO node : data){
-//            nodeVOS.add(node);
+            nodeVOS.add(node);
+//            上面一行原来注释掉了，可这样不就查不到了吗
             nodeVOS.addAll(graphQueryUtils.findNeighbour(node.getId()).getNodes());
             relationVOS.addAll(graphQueryUtils.findNeighbour(node.getId()).getLinks());
         }
@@ -338,9 +352,31 @@ public class KnowGraphControlServiceImpl implements IKnowGraphControlService {
 //            result.setNodes(new LinkedList<>(data));
 //            return result;
 //        }else{
+//        System.out.println("输出"+nodeVOS.size());
+
+//      此时nodevos里有相关节点和重复节点
+//        为什么set里有重复元素？
         result.setNodes(new LinkedList<>(nodeVOS));
         result.setLinks(new LinkedList<>(relationVOS));
+//        System.out.println("输出"+result.getNodes().get(0).getName()+" "+result.getNodes().get(1).getName());
         return result;
 //        }
+    }
+
+    public List<String> getTableNames(){
+        return this.userMapper.select_table();
+    }
+
+    public Boolean importFromMysql(String tableName){
+        String path=importURL+"temp.csv";
+        File tempFile=new File(path);
+        userMapper.out_file(tableName);
+        graphQueryUtils.importCsv("temp.csv");
+        tempFile.delete();
+        return true;
+    }
+
+    public static void main(String[] args) {
+
     }
 }

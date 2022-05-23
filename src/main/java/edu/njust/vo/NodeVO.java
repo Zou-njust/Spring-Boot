@@ -1,6 +1,7 @@
 package edu.njust.vo;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 节点显示对象
@@ -82,5 +83,24 @@ public class NodeVO {
 
     public void setProperties(Map<String, Object> properties) {
         this.properties = properties;
+    }
+
+//    针对set集合重复问题重写了equals和hashCode方法
+//    id用==不能正确判别，使用下面的方法可以，可能是因为用了Long类而不是基础类型
+    @Override
+    public boolean equals(Object obj){
+        if(!(obj instanceof NodeVO)){
+            return false;
+        }
+        NodeVO n=(NodeVO) obj;
+        if(Objects.equals(this.id, n.id)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode(){
+        return this.name.hashCode();
     }
 }

@@ -234,10 +234,8 @@ public class Neo4jUtil {
                             ents.add(rss);
                         }
                     }
-
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

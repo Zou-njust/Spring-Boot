@@ -54,9 +54,11 @@ public class GraphQueryUtils {
     public static final String LABEL_KEY = "CALL db.schema.nodeTypeProperties() yield nodeLabels,propertyName\n" +
             "WITH nodeLabels,propertyName WHERE \"%s\" in nodeLabels\n" +
             "RETURN propertyName";
+    public static final String NODE_NAME = "MATCH (n:`%s`) WHERE n.name='%s' RETURN n";
     public static final String NODE_PROPERTY = "MATCH (n:`%s`) WHERE n.%s RETURN n;";
     public static final String NODE_KEYWORD1 = "MATCH (n:`%s`:`%s`) RETURN n;";
-    public static final String NODE_KEYWORD2 = "MATCH (n:`%s`) WHERE n.name contains '%s' RETURN n;";
+//    添加了按飞机类别查询
+    public static final String NODE_KEYWORD2 = "MATCH (n:`%s`) WHERE n.name contains '%s' or n.类别 contains '%s' RETURN n;";
     public static final String NODE_PROPERTY_DOMAIN = "MATCH (n:`%s`:`%s`) WHERE n.`%s` = '%s' RETURN n;";
     public static final String NODE_PROPERTY_DOMAIN_NUM = "MATCH (n:`%s`:`%s`) WHERE n.`%s` = %s RETURN n;";
     public static final String NODE_PROPERTY_DOMAIN_NOVALUE = "MATCH (n:`%s`:`%s`) WHERE EXISTS(n.`%s`) RETURN n;";
@@ -68,6 +70,8 @@ public class GraphQueryUtils {
     public static final String LINKNODE_ID = "MATCH (n:`%s`) -[r]-(m) where id(n)=%s  return n,m limit 100";
     public static final String REL_TYPE_NODE = "MATCH (h)-[r]-() WHERE id(h)=%d RETURN distinct type(r)";
     public static final String REL_TYPE_AND_NODE_TYPE_NODE = "MATCH (h)-[r]-(t) WHERE id(h)=%d RETURN type(r), labels(t)";
+    // 导入csv文件
+    public static final String IMPORT_CSV = "LOAD CSV WITH HEADERS FROM 'file:///mysql/%s' AS line MERGE (z:知识图谱 :飞机{name:line.name,类别:line.类别,国家地区:line.国家地区})";
     /**
      * 对某类Label的某个属性设置唯一约束
      * Cypher 需要三个模板参数：约束名，Label类型，Property
@@ -107,6 +111,7 @@ public class GraphQueryUtils {
     public static final String FIND_PLACE="MATCH p=(n:事理图谱:事件)-[b:`发生`]->(c:事理图谱:地点) WHERE id(n)=%d RETURN c";
 
     public static final String EDIT_NODE="MATCH (r) WHERE id(r) =%d SET r.`%s`= '%s' return r";
+    public static final String DELETE_PROPERTY="MATCH (r) WHERE id(r) =%d REMOVE r.`%s` return r";
     public static final String EDIT_RELATION="MATCH (r) WHERE id(r) =%d SET r.name= '%s' return r";
     public static final String CREATE_NODE="create (n:`%s`:`%s`) return id(n)";
 
@@ -208,16 +213,22 @@ public class GraphQueryUtils {
         String cypher = String.format(NODE_PROPERTY, label,property,value);
         return findFirstNode(cypher);
     }
-    /**
-     * 查询节点
-     *
-     * @param label    Label
-     * @param property 属性
-     * @return 节点VO
-     */
-    public List<NodeVO> findNodeByName(String label, String property, String value) {
-        String cypher = String.format(NODE_PROPERTY, label,property,value);
-        return findGraphNode(cypher);
+//    /**
+//     * 查询节点
+//     *
+//     * @param label    Label
+//     * @param property 属性
+//     * @return 节点VO
+//     */
+//    public List<NodeVO> findNodeByName(String label, String property, String value) {
+//        String cypher = String.format(NODE_PROPERTY, label,property,value);
+//        return findGraphNode(cypher);
+//    }
+    public NodeVO findNodeByName(String domain,String name) {
+        String cypher = String.format(NODE_NAME, domain,name);
+        List<NodeVO> nodeVOS = findGraphNode(cypher);
+        NodeVO node=nodeVOS.get(0);
+        return node;
     }
     /**
      * 查询图谱中的所有Label
@@ -611,7 +622,6 @@ public class GraphQueryUtils {
                     }
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -878,6 +888,15 @@ public class GraphQueryUtils {
     public Boolean deleteRel(Integer relId) {
         try (Session session = driver.session()) {
             session.run(String.format(DELETE_REL, relId));
+        } catch (Exception e) {
+            throw e;
+        }
+        return true;
+    }
+
+    public Boolean importCsv(String csvName){
+        try (Session session = driver.session()) {
+            session.run(String.format(IMPORT_CSV, csvName));
         } catch (Exception e) {
             throw e;
         }

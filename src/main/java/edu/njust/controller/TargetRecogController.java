@@ -1,8 +1,10 @@
 package edu.njust.controller;
 
+import edu.njust.api.CommonResult;
 import edu.njust.dto.BasicAttributes;
 import edu.njust.dto.IdentityResult;
 import edu.njust.dto.RecogResult;
+import edu.njust.entity.PbMsg;
 import edu.njust.model.Membership;
 import edu.njust.model.TYpTargetRecog;
 import edu.njust.model.UdpDataModel;
@@ -13,6 +15,7 @@ import edu.njust.udp.UdpResultData;
 import edu.njust.udp.udpmodel.IdentityModel;
 import edu.njust.utils.AutoRecogResult;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +31,7 @@ import java.util.List;
 @CrossOrigin
 public class TargetRecogController {
 
-    @Resource
+    @Autowired
     private TargetRecogService recogService;
 
     @GetMapping("/autoRecog")
@@ -69,6 +72,35 @@ public class TargetRecogController {
         // 消息结果组装成字节流发送到目标平台
         UdpSender sender = new UdpSender();
         sender.send(message.assembleByte());
+    }
 
+    @GetMapping("judgeType")
+    public CommonResult<RecogResult> judgeType(@RequestParam(value="longitude") float longitude,
+                             @RequestParam(value="latitude") float latitude,
+                             @RequestParam(value="height") float height,
+                             @RequestParam(value="speed") float speed,
+                             @RequestParam(value="pbModel") String pbModel){
+        BasicAttributes input=new BasicAttributes(longitude,latitude,height,speed);
+        RecogResult res= null;
+        try {
+            res = recogService.typeRecog(input,pbModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CommonResult.success(res);
+    }
+
+    @GetMapping("getPbList")
+    public CommonResult<List<PbMsg>> getPbList(@RequestParam(value="pageNum") int pageNum){
+        List<PbMsg> res = recogService.getPbList(pageNum);
+//        for(PbMsg pbMsg:res){
+//            System.out.println(pbMsg.getName()+" "+pbMsg.getTimeString());
+//        }
+        return CommonResult.success(res);
+    }
+
+    @GetMapping("getTotal")
+    public CommonResult<Integer> getTotal(){
+        return CommonResult.success(recogService.getTotal());
     }
 }
